@@ -1,16 +1,42 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [
 		{
-			"path": "pages/index/index",
+			"path": "pages/login/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "登录中心"
+			}
+		},
+		{
+			"path": "pages/dormlist/index",
+			"style": {
+				"navigationBarTitleText": "寝室列表"
+			}
+		},
+		
+		{
+			"path": "pages/checkedlist/index",
+			"style": {
+				"navigationBarTitleText": "查寝记录"
+			}
+		},
+		{
+			"path": "pages/checkform/index",
+			"style": {
+				"navigationBarTitleText": "寝室评价"
+			}
+		},
+		{
+			"path": "pages/feedback/index",
+			"style": {
+				"navigationBarTitleText": "反馈页面"
 			}
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundTextStyle": "light",
+		"navigationBarTitleText": "赣南医学院",
+		"navigationBarTextStyle": "white",
+		"navigationBarBackgroundColor": "#00702B",
 		"backgroundColor": "#F8F8F8"
 	}
 }

@@ -55,10 +55,13 @@
     "@dcloudio/uni-quickapp-native": "^2.0.0-30720210122002",
     "@dcloudio/uni-quickapp-webview": "^2.0.0-30720210122002",
     "@dcloudio/uni-stat": "^2.0.0-30720210122002",
+    "@dcloudio/uni-ui": "^1.2.10",
     "@vue/shared": "^3.0.0",
     "core-js": "^3.6.5",
     "flyio": "^0.6.2",
+    "node-sass": "^5.0.0",
     "regenerator-runtime": "^0.12.1",
+    "sass-loader": "^10.1.1",
     "vue": "^2.6.11",
     "vuex": "^3.2.0"
   },
@@ -81,6 +84,7 @@
     "mini-types": "*",
     "miniprogram-api-typings": "*",
     "postcss-comment": "^2.0.0",
+    "sass": "^1.32.7",
     "vue-template-compiler": "^2.6.11"
   },
   "browserslist": [
@@ -89,5 +93,11 @@
   ],
   "uni-app": {
     "scripts": {}
-  }
+  },
+  "easycom": {
+		"autoscan": true,
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	}
 }
