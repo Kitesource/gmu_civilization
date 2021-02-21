@@ -24,7 +24,7 @@
         </view>
       </view>
       <button
-        :class="['confirm-btn', (username && password) ? 'btn-hover' : 'btn-default']"
+        :class="['confirm-btn',username && password ? 'btn-hover' : 'btn-default']"
         @click="login"
       >
         登录
@@ -32,10 +32,10 @@
       <view class="forget-section"> 忘记密码? </view>
     </view>
     <!-- 底部注册区域 -->
-    <view class="register-section">
+    <!-- <view class="register-section">
       还没有账号?
       <text>马上注册</text>
-    </view>
+    </view> -->
   </view>
 </template>
 
@@ -45,8 +45,8 @@ export default {
   components: {},
   data() {
     return {
-      username: "123",
-      password: "123456",
+      username: "stucadres",
+      password: "123456"
     };
   },
   onLoad() {
@@ -55,10 +55,10 @@ export default {
   methods: {
     //表单项内容发生改变
     handleInUser(e) {
-      this.username = e.detail.value
+      this.username = e.detail.value;
     },
     handleInPwd(e) {
-      this.password = e.detail.value
+      this.password = e.detail.value;
     },
     //点击登录
     async login() {
@@ -68,7 +68,7 @@ export default {
         //提示用户
         uni.showToast({
           title: "学号不能为空",
-          icon: "none",
+          icon: "none"
         });
         return;
       }
@@ -76,41 +76,44 @@ export default {
         //提示用户
         uni.showToast({
           title: "密码不能为空",
-          icon: "none",
+          icon: "none"
         });
         return;
       }
       //后端验证
-      let result = await request("/login/login", { username:this.username, password:this.password });
+      let result = await request("/login/login", {
+        username: this.username,
+        password: this.password
+      });
       if (result.data.code === "200") {
         uni.showToast({
-          title: "登录成功",
+          title: "登录成功"
         });
         uni.setStorageSync("JSESSIONID", result.cookies[0]);
         const users = result.data.data.role;
         //登录成功后跳转至选择寝室列表界面,判断角色
         if (users == "ROLE_student") {
           uni.navigateTo({
-            url: "/pages/checkedlist/index?username=" + this.username,
+            url: "/pages/checkedlist/index?username=" + this.username
           });
         } else {
           uni.navigateTo({
-            url: "/pages/dormlist/index",
+            url: "/pages/dormlist/index"
           });
         }
       } else if (result.data.code === 404) {
         uni.showToast({
           title: "用户名或密码错误",
-          icon: "none",
+          icon: "none"
         });
       } else {
         uni.showToast({
           title: "登录失败，请重新登录",
-          icon: "none",
+          icon: "none"
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -182,19 +185,19 @@ export default {
       margin-top: 40rpx;
     }
   }
-  .register-section {
-    position: absolute;
-    left: 0;
-    bottom: 50rpx;
-    width: 100%;
-    font-size: 28rpx;
-    color: #606266;
-    text-align: center;
-    text {
-      color: #4399fc;
-      margin-left: 10rpx;
-    }
-  }
+  // .register-section {
+  //   position: absolute;
+  //   left: 0;
+  //   bottom: 50rpx;
+  //   width: 100%;
+  //   font-size: 28rpx;
+  //   color: #606266;
+  //   text-align: center;
+  //   text {
+  //     color: #4399fc;
+  //     margin-left: 10rpx;
+  //   }
+  // }
   // 动态添加登录按钮的背景颜色
   .btn-default {
     background-color: #aaa;

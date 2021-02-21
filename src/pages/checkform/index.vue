@@ -40,6 +40,7 @@
           <view class="des_title">合格描述:</view>
           <view class="textarea_container">
             <textarea
+              :maxlength="50"
               @input="handleTextarea"
               placeholder="请输入..."
             ></textarea>
@@ -259,7 +260,7 @@ export default {
           success: function(res) {
             if (res.confirm) {
               _this.chooseImgs.splice(index, 1);
-              _this.uploadImgs.splice(index,1);
+              _this.uploadImgs.splice(index, 1);
             } else if (res.cancel) {
               return false;
             }
@@ -272,7 +273,7 @@ export default {
           success: function(res) {
             if (res.confirm) {
               _this.unChooseImgs.splice(index, 1);
-              _this.unUploadImgs.splice(index, 1)
+              _this.unUploadImgs.splice(index, 1);
             } else if (res.cancel) {
               return false;
             }
@@ -282,7 +283,7 @@ export default {
     },
     //点击重置按钮
     reset() {
-      this.college='';
+      this.college = "";
       this.chooseImgs = [];
       this.unChooseImgs = [];
     },
