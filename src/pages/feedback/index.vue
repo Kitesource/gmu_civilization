@@ -55,7 +55,7 @@
             @click="handlePreviewImg"
             @longpress="longpressImg"
           >
-            <upload-imgs :src="item"></upload-imgs>
+            <upload-imgs v-if="uploadImgs.length" :src="item"></upload-imgs>
           </view>
         </view>
       </view>
@@ -119,7 +119,7 @@ export default {
     PreviewCheckedImg(event) {
       const _this = this;
       let { url } = event.currentTarget.dataset;
-      wx.previewImage({
+      uni.previewImage({
         current: url, // 当前显示图片的http链接
         urls: _this.urlList // 需要预览的图片http链接列表
       });
@@ -170,7 +170,7 @@ export default {
     handlePreviewImg(event) {
       const _this = this;
       let { path } = event.currentTarget.dataset;
-      wx.previewImage({
+      uni.previewImage({
         current: path, // 当前显示图片的http链接
         urls: _this.uploadImgs // 需要预览的图片http链接列表
       });
@@ -180,7 +180,7 @@ export default {
       const _this = this;
       //获取当前点击图片下标
       let { index } = event.currentTarget.dataset;
-      wx.showModal({
+      uni.showModal({
         title: "提示",
         content: "确认要删除该图片吗?",
         success: function(res) {
@@ -196,14 +196,14 @@ export default {
     //点击提交按钮， 提交成功返回上一页
     async commit() {
       if (!this.value.trim()) {
-        wx.showToast({
+        uni.showToast({
           title: "请输入反馈信息",
           icon: "none"
         });
         return;
       }
       if (!this.uploadImgs.length) {
-        wx.showToast({
+        uni.showToast({
           title: "请上传反馈图片",
           icon: "none"
         });
@@ -212,13 +212,13 @@ export default {
       // 发送请求
       this.checkedInfo.feedbackPicture = this.uploadImgs.join(",");
       this.checkedInfo.feedbackDescribe = this.value;
-      let res = await request("/insertcheckdorm", { ...this.checkedInfo });
+      let res = await request("/sendfeedback", { ...this.checkedInfo });
       if (res.data.code == 200) {
-        wx.showToast({
+        uni.showToast({
           title: "提交成功",
           icon: "success"
         });
-        wx.navigateBack({
+        uni.navigateBack({
           delta: 1
         });
       }

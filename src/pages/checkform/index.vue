@@ -303,7 +303,6 @@ export default {
         });
         return;
       }
-
       // 发送请求
       if (this.isSelected) {
         //合格
