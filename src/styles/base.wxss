@@ -12,10 +12,9 @@ page {
   box-sizing: border-box;
 }
 page {
-  font-size: 28rpx;
-  color: #666;
+  font-size: 32rpx;
+  height: 100%;
 }
-image {
-  width: 100%;
-  display: block;
+.Active{
+  background-color: #DEDEDE;
 }

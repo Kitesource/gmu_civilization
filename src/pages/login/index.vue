@@ -45,7 +45,7 @@ export default {
   components: {},
   data() {
     return {
-      username: "stucadres",
+      username: "123",
       password: "123456",
     };
   },
@@ -91,7 +91,7 @@ export default {
         //登录成功后跳转至选择寝室列表界面,判断角色
         if (users == "ROLE_student") {
           uni.navigateTo({
-            url: "/pages/checkedlist/index?username=" + username,
+            url: "/pages/checkedlist/index?username=" + this.username,
           });
         } else {
           uni.navigateTo({
