@@ -41,8 +41,8 @@
           <view class="textarea_container">
             <textarea
               :maxlength="50"
-              @input="handleTextarea"
               placeholder="请输入..."
+              v-model="qualifiedDescribe"
             ></textarea>
           </view>
         </view>
@@ -72,8 +72,8 @@
           <view class="textarea_container">
             <textarea
               :maxlength="50"
-              @input="handleTextarea"
               placeholder="请输入..."
+              v-model="unqualifiedDescribe"
             ></textarea>
           </view>
         </view>
@@ -97,7 +97,7 @@
       </block>
       <!-- 提交/返回 -->
       <view class="last_group">
-        <button type="default" form-type="reset" @click="reset">重置</button>
+        <button type="default" @click="reset">重置</button>
         <button type="primary" @click="commit">提交</button>
       </view>
     </form>
@@ -128,7 +128,7 @@ export default {
       uploadImgs: [], //上传后的合格图片路径
       unUploadImgs: [],
       qualifiedPicture: "", //需提交的图片路径参数
-      unqualifiedPicture: ""
+      unqualifiedPicture: "",
     };
   },
 
@@ -141,7 +141,7 @@ export default {
     var _this = this;
     const eventChannel = this.getOpenerEventChannel();
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
-    eventChannel.on("acceptDataFromOpenerPage", function(data) {
+    eventChannel.on("acceptDataFromOpenerPage", function (data) {
       _this.tung = data.tung + "栋";
       _this.layer = data.layer;
       _this.dormnum = data.dormnum;
@@ -155,7 +155,7 @@ export default {
       this.isSelected = true;
       this.state = "合格";
       //切换后清空表单数据
-      this.undescription = "";
+      this.unqualifiedDescribe = "";
       this.unChooseImgs = [];
       this.unUploadImgs = [];
     },
@@ -164,19 +164,9 @@ export default {
       this.isSelected = false;
       this.state = "不合格";
       //切换后清空表单数据
-      this.description = "";
-      this.ChooseImgs = [];
-      this.UploadImgs = [];
-    },
-    //添加描述
-    handleTextarea(e) {
-      if (this.isSelected) {
-        //合格描述可以为空
-        this.qualifiedDescribe = e.detail.value;
-      } else {
-        //不合格描述不能为空
-        this.unqualifiedDescribe = e.detail.value.trim();
-      }
+      this.qualifiedDescribe = "";
+      this.chooseImgs = [];
+      this.uploadImgs = [];
     },
     //点击+号， 选择图片并自动上传
     handleChooseImg() {
@@ -184,7 +174,7 @@ export default {
         uni.showToast({
           title: "最多上传3张图片哦~",
           duration: 2000,
-          icon: "none"
+          icon: "none",
         });
         return;
       }
@@ -193,7 +183,7 @@ export default {
         count: 1,
         sizeType: ["original", "compressed"],
         sourceType: ["album", "camera"],
-        success: imageRes => {
+        success: (imageRes) => {
           //获取本地存储的cookie
           let JSESSIONID = uni
             .getStorageSync("JSESSIONID")
@@ -206,7 +196,7 @@ export default {
           } else {
             _this.unChooseImgs = [
               ..._this.unChooseImgs,
-              ...imageRes.tempFilePaths
+              ...imageRes.tempFilePaths,
             ];
           }
           // 上传图片
@@ -215,11 +205,11 @@ export default {
             url: "https://111.75.252.147/score/tupian",
             header: {
               "content-type": "multipart/form-data",
-              cookie: cookie
+              cookie: cookie,
             },
             filePath: tempFilePaths[tempFilePaths.length - 1],
             name: "file",
-            success: res => {
+            success: (res) => {
               let url = JSON.parse(res.data).data;
               // 将上传图片后得到的路径保存在数组中
               if (_this.isSelected) {
@@ -227,9 +217,9 @@ export default {
               } else {
                 _this.unUploadImgs.push(url);
               }
-            }
+            },
           });
-        }
+        },
       });
     },
     //点击图片预览大图
@@ -239,13 +229,13 @@ export default {
         let path = e.currentTarget.dataset.id;
         uni.previewImage({
           current: path, // 当前显示图片的http链接
-          urls: _this.chooseImgs // 需要预览的图片http链接列表
+          urls: _this.chooseImgs, // 需要预览的图片http链接列表
         });
       } else {
         let path = e.currentTarget.dataset.id;
         uni.previewImage({
           current: path, // 当前显示图片的http链接
-          urls: _this.unChooseImgs // 需要预览的图片http链接列表
+          urls: _this.unChooseImgs, // 需要预览的图片http链接列表
         });
       }
     },
@@ -257,35 +247,48 @@ export default {
         uni.showModal({
           title: "提示",
           content: "确认要删除该图片吗?",
-          success: function(res) {
+          success: function (res) {
             if (res.confirm) {
               _this.chooseImgs.splice(index, 1);
               _this.uploadImgs.splice(index, 1);
             } else if (res.cancel) {
               return false;
             }
-          }
+          },
         });
       } else {
         uni.showModal({
           title: "提示",
           content: "确认要删除该图片吗?",
-          success: function(res) {
+          success: function (res) {
             if (res.confirm) {
               _this.unChooseImgs.splice(index, 1);
               _this.unUploadImgs.splice(index, 1);
             } else if (res.cancel) {
               return false;
             }
-          }
+          },
         });
       }
     },
     //点击重置按钮
     reset() {
-      this.college = "";
-      this.chooseImgs = [];
-      this.unChooseImgs = [];
+      const _this = this;
+      uni.showModal({
+        title: "提示",
+        content: "确认要重置吗",
+        success: function (res) {
+          if (res.confirm) {
+            _this.college = "";
+            _this.qualifiedDescribe = "";
+            _this.unqualifiedDescribe = "";
+            _this.chooseImgs = [];
+            _this.unChooseImgs = [];
+          } else if (res.cancel) {
+            return;
+          }
+        },
+      });
     },
     //点击提交表单数据
     commit() {
@@ -300,7 +303,7 @@ export default {
       if (this.college == "") {
         uni.showToast({
           title: "请先选择学院~",
-          icon: "none"
+          icon: "none",
         });
         return;
       }
@@ -310,14 +313,14 @@ export default {
         if (this.chooseImgs.length != 0 && this.uploadImgs.length == 0) {
           uni.showToast({
             title: "请先上传添加的图片",
-            icon: "none"
+            icon: "none",
           });
           return;
         }
         uni.showModal({
           title: "提示",
           content: "确认提交吗？",
-          success: async function(res) {
+          success: async function (res) {
             if (res.confirm) {
               //用户点击确定
               let result = await request("/insertcheckdorm", {
@@ -330,17 +333,17 @@ export default {
                 qualifiedDescribe: _this.qualifiedDescribe,
                 unqualifiedDescribe: "",
                 qualifiedPicture: _this.qualifiedPicture,
-                unqualifiedPicture: ""
+                unqualifiedPicture: "",
               });
               if (result.data.code === 200) {
                 uni.showToast({
                   title: "提交成功~",
-                  icon: "success"
+                  icon: "success",
                 });
               } else {
                 uni.showToast({
                   title: "提交失败~",
-                  icon: "fail"
+                  icon: "fail",
                 });
               }
               //提交成功后跳转到寝室列表页面
@@ -349,28 +352,28 @@ export default {
               // 用户点击取消
               return;
             }
-          }
+          },
         });
       } else {
         //不合格，需要描述和上传图片
         if (!this.unqualifiedDescribe) {
           uni.showToast({
             title: "请先添加描述！",
-            icon: "none"
+            icon: "none",
           });
           return;
         }
         if (!this.unUploadImgs) {
           uni.showToast({
             title: "请先添加图片！",
-            icon: "none"
+            icon: "none",
           });
           return;
         }
         uni.showModal({
           title: "提交",
           content: "确认提交吗？",
-          success: async function(res) {
+          success: async function (res) {
             if (res.confirm) {
               //用户点击确定
               let result = await request("/insertcheckdorm", {
@@ -383,18 +386,18 @@ export default {
                 qualifiedDescribe: "",
                 unqualifiedDescribe: _this.unqualifiedDescribe,
                 qualifiedPicture: "",
-                unqualifiedPicture: _this.unqualifiedPicture
+                unqualifiedPicture: _this.unqualifiedPicture,
               });
               if (result.data.code === 200) {
                 uni.showToast({
                   title: "提交成功~",
-                  icon: "success"
+                  icon: "success",
                 });
                 //
               } else {
                 uni.showToast({
                   title: "提交失败~",
-                  icon: "fail"
+                  icon: "fail",
                 });
               }
               //提交成功后跳转到寝室列表页面
@@ -403,11 +406,11 @@ export default {
               // 用户点击取消
               return;
             }
-          }
+          },
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
