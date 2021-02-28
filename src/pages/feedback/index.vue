@@ -150,7 +150,7 @@ export default {
           //上传图片
           const tempFilePaths = res.tempFilePaths;
           uni.uploadFile({
-            url: "https://111.75.252.147/score/tupian",
+            url: "https://cxcy.gmu.cn/score/tupian",
             filePath: tempFilePaths[tempFilePaths.length - 1],
             name: "file",
             header: {

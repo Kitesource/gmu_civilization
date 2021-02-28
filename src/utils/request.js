@@ -8,7 +8,8 @@ export default (url, data = {}, method = 'POST') => {
         title: '加载中...',
         mask: true,
     })
-    const baseUrl = 'https://111.75.252.147/score';
+    // const baseUrl = 'https://111.75.252.147/score';
+    const baseUrl = 'https://cxcy.gmu.cn/score';
     //1.new Promise 初始化promise实例的状态为pending
     return new Promise((resolve, reject) => {
         //使用split对得到的cookie进行分割

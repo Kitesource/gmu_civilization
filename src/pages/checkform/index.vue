@@ -202,7 +202,7 @@ export default {
           // 上传图片
           const tempFilePaths = imageRes.tempFilePaths;
           uni.uploadFile({
-            url: "https://111.75.252.147/score/tupian",
+            url: "https://cxcy.gmu.cn/score/tupian",
             header: {
               "content-type": "multipart/form-data",
               cookie: cookie,

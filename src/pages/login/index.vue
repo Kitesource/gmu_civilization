@@ -29,7 +29,7 @@
       >
         登录
       </button>
-      <view class="forget-section"> 忘记密码? </view>
+      <!-- <view class="forget-section"> 忘记密码? </view> -->
     </view>
     <!-- 底部注册区域 -->
     <!-- <view class="register-section">
@@ -45,12 +45,9 @@ export default {
   components: {},
   data() {
     return {
-      username: "stucadres",
-      password: "123456"
+      username: "",
+      password: ""
     };
-  },
-  onLoad() {
-    console.log(getApp().globalData.mssage);
   },
   methods: {
     //表单项内容发生改变
