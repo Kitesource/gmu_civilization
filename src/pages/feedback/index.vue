@@ -19,8 +19,9 @@
         <view class="pic_content">
           <view
             class="checkedImg_item"
-            v-for="item in urlList"
+            v-for="(item,index) in urlList"
             :key="item"
+            :data-path="index"
             @click="PreviewCheckedImg"
           >
             <image v-if="urlList.length" :src="item" />
@@ -50,8 +51,9 @@
           <button @click="handleAddImg">+</button>
           <view
             class="img_wrap"
-            v-for="item in chooseImgs"
+            v-for="(item,index) in chooseImgs"
             :key="item"
+            :data-path="index"
             @click="handlePreviewImg"
             @longpress="longpressImg"
           >
@@ -168,6 +170,7 @@ export default {
     },
     //点击上传的图片预览大图
     handlePreviewImg(event) {
+      console.log(event);
       const _this = this;
       let { path } = event.currentTarget.dataset;
       uni.previewImage({

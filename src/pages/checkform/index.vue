@@ -225,16 +225,15 @@ export default {
     //点击图片预览大图
     previewBigImg(e) {
       const _this = this;
+      const index = e.currentTarget.dataset.index;
       if (this.isSelected) {
-        let path = e.currentTarget.dataset.id;
         uni.previewImage({
-          current: path, // 当前显示图片的http链接
+          current: index, // 当前显示图片的http链接
           urls: _this.chooseImgs, // 需要预览的图片http链接列表
         });
       } else {
-        let path = e.currentTarget.dataset.id;
         uni.previewImage({
-          current: path, // 当前显示图片的http链接
+          current: index, // 当前显示图片的http链接
           urls: _this.unChooseImgs, // 需要预览的图片http链接列表
         });
       }
