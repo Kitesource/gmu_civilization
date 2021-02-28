@@ -62,6 +62,7 @@ export default {
   data() {
     return {
       username: "",
+      id:"",
       dateList: [], //查寝日期数组
       dormInfo: [], //查寝信息数组
       queryObj: {}, //修改已读状态所需的参数
@@ -119,20 +120,12 @@ export default {
     },
     //点击跳转到反馈页面 发送请求修改是否已读状态
     async handleToFeedback(e) {
-      let { id } = e.currentTarget.dataset;
-      let _this = this;
+      this.id  = e.currentTarget.dataset.id;
       uni.navigateTo({
-        url: "/pages/feedback/index",
-        success: function(res) {
-          // 通过eventChannel向被打开页面传送数据
-          res.eventChannel.emit("acceptDataFromOpenerPage", {
-            id,
-            username: _this.username
-          });
-        }
+        url: `/pages/feedback/index?username=${this.username}&id=${this.id}`
       });
       this.dormInfo.some(item => {
-        if (item.id == id) {
+        if (item.id == this.id) {
           this.queryObj = item;
         }
       });

@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="container" v-if="Object.keys(checkedInfo).length">
     <view class="title">
       <text>寝室:{{ checkedInfo.dormNum }}</text>
       <text class="date">查寝时间:{{ checkedInfo.checkTime }}</text>
@@ -19,7 +19,7 @@
         <view class="pic_content">
           <view
             class="checkedImg_item"
-            v-for="(item,index) in urlList"
+            v-for="(item, index) in urlList"
             :key="item"
             :data-path="index"
             @click="PreviewCheckedImg"
@@ -51,7 +51,7 @@
           <button @click="handleAddImg">+</button>
           <view
             class="img_wrap"
-            v-for="(item,index) in chooseImgs"
+            v-for="(item, index) in chooseImgs"
             :key="item"
             :data-path="index"
             @click="handlePreviewImg"
@@ -75,38 +75,33 @@ import request from "../../utils/request";
 export default {
   components: {
     uniCard,
-    UploadImgs
+    UploadImgs,
   },
   data() {
     return {
-      stunum: "", //学生登录账号
+      username: "", //学生登录账号
       checkedInfo: {}, //当天查寝信息
-      value:'', //反馈描述
+      value: "", //反馈描述
       urlList: [], //查寝照片
       chooseImgs: [],
-      uploadImgs: []
+      uploadImgs: [],
     };
   },
   //监听页面加载
-  onLoad() {
-    let _this = this;
-    let id = null;
-    // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
-    const eventChannel = this.getOpenerEventChannel();
-    eventChannel.on("acceptDataFromOpenerPage", function(data) {
-      (_this.stunum = data.username), (id = data.id);
-    });
+  onLoad(options) {
+    this.username = options.username;
+    let id = options.id;
     this.getCheckList(id);
   },
   methods: {
     //获取查寝记录的方法
     async getCheckList(id) {
-      let res = await request("/stuDorm", { stunum: this.stunum });
+      let res = await request("/stuDorm", { stunum: this.username });
       let dormInfo = res.data.data2;
       dormInfo.some(item => {
         if (item.id == id) {
           this.checkedInfo = item;
-        }  
+        }
       });
       // 分割图片路径字符串
       let url =
@@ -120,7 +115,7 @@ export default {
       let { url } = event.currentTarget.dataset;
       uni.previewImage({
         current: url, // 当前显示图片的http链接
-        urls: _this.urlList // 需要预览的图片http链接列表
+        urls: _this.urlList, // 需要预览的图片http链接列表
       });
     },
     //点击添加并上传图片
@@ -129,7 +124,7 @@ export default {
         uni.showToast({
           title: "最多上传3张图片哦~",
           icon: "none",
-          mask: true
+          mask: true,
         });
         return;
       }
@@ -138,7 +133,7 @@ export default {
         count: 1,
         sizeType: ["original", "compressed"],
         sourceType: ["album", "camera"],
-        success: res => {
+        success: (res) => {
           //获取本地存储的cookie
           let JSESSIONID = uni
             .getStorageSync("JSESSIONID")
@@ -155,14 +150,14 @@ export default {
             name: "file",
             header: {
               "content-type": "multipart/form-data",
-              cookie: cookie
+              cookie: cookie,
             },
             success(res) {
               let url = JSON.parse(res.data).data;
               _this.uploadImgs.push(url);
-            }
+            },
           });
-        }
+        },
       });
     },
     //点击上传的图片预览大图
@@ -172,7 +167,7 @@ export default {
       let { path } = event.currentTarget.dataset;
       uni.previewImage({
         current: path, // 当前显示图片的http链接
-        urls: _this.uploadImgs // 需要预览的图片http链接列表
+        urls: _this.uploadImgs, // 需要预览的图片http链接列表
       });
     },
     //长按图片选择是否删除
@@ -183,14 +178,14 @@ export default {
       uni.showModal({
         title: "提示",
         content: "确认要删除该图片吗?",
-        success: function(res) {
+        success: function (res) {
           if (res.confirm) {
             _this.chooseImgs.splice(index, 1);
             _this.uploadImgs.splice(index, 1);
           } else if (res.cancel) {
             return false;
           }
-        }
+        },
       });
     },
     //点击提交按钮， 提交成功返回上一页
@@ -198,14 +193,14 @@ export default {
       if (!this.value.trim()) {
         uni.showToast({
           title: "请输入反馈信息",
-          icon: "none"
+          icon: "none",
         });
         return;
       }
       if (!this.uploadImgs.length) {
         uni.showToast({
           title: "请上传反馈图片",
-          icon: "none"
+          icon: "none",
         });
         return;
       }
@@ -216,14 +211,14 @@ export default {
       if (res.data.code == 200) {
         uni.showToast({
           title: "提交成功",
-          icon: "success"
+          icon: "success",
         });
         uni.navigateBack({
-          delta: 1
+          delta: 1,
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
