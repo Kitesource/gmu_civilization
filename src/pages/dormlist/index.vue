@@ -81,7 +81,6 @@ export default {
         tung: this.tung,
         layer: this.layer
       });
-      console.log(result);
       if (!result.data.data2.length) {
         uni.showToast({
           title: "查询失败,请重新选择~",

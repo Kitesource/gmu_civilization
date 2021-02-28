@@ -103,12 +103,9 @@ export default {
     async getCheckList(id) {
       let res = await request("/stuDorm", { stunum: this.stunum });
       let dormInfo = res.data.data2;
-      console.log(dormInfo);
-
       dormInfo.some(item => {
         if (item.id == id) {
           this.checkedInfo = item;
-          console.log(this.checkedInfo);
         }  
       });
       // 分割图片路径字符串
