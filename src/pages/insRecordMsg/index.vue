@@ -4,8 +4,8 @@
       class="uniSearch"
       :radius="100"
       :maxlength="10"
-      :clearButton="none"
-      placeholder="请输入合格状态"
+      clearButton="none"
+      placeholder="请输入已读/未读搜索"
       @input="handleInput"
       @confirm="handleSearch"
       @cancel="handleCancel"
@@ -18,13 +18,13 @@
       <uni-tag text="合格状态" type="primary" :inverted="true"></uni-tag>
       <uni-tag text="是否已读" type="primary" :inverted="true"></uni-tag>
     </view>
-    <scroll-view class="sroll_content" enable-flex scroll-y>
+    <scroll-view class="sroll_content" scroll-y>
       <view
         class="sroll_item"
         hover-class="Active"
-        @click="handleToFeedback"
+        @click="handleToRecord"
         :data-id="item.id"
-        v-for="(item,index) in dormInfo"
+        v-for="(item, index) in insDormInfo"
         :key="index"
       >
         <view class="item_time">
@@ -56,7 +56,7 @@
         </view>
         <view class="item">
           <uni-tag
-            v-if="item.stuReadIt == 'read'"
+            v-if="item.fdyReadIt == 'read'"
             text="已读"
             type="default"
           ></uni-tag>
@@ -83,101 +83,105 @@ export default {
   },
   data() {
     return {
-      username: "",
-      dormInfo: [], //学生账号查寝信息数组
-      checkedInfo:[],
+      insDormInfo: [], //辅导员账号时间截取后寝室查寝记录数组
+      checkTime: "",
+      dormNum: "",
+      className: "",
+      state: "",
+      dateList: [], //查寝日期数组
       queryObj: {}, //修改已读状态所需的参数
       value: "", //搜索框输入内容
-      searchObj: {}, //搜索参数对象
-      currentPage: 1,
+      currentPage: 1, //为当前页
       pageSize: 15,
       total:0,
-      isShow: false,//使页面第一次显示不发送请求
+      isShow: false //
     };
   },
   //监听页面加载
   onLoad(options) {
-    this.username = options.username;
     this.dormNum = options.dormNum;
     this.state = options.state;
-    this.getCheckList();
+    this.className = options.className;
+    this.insGetchecklist();
   },
   onShow() {
     if (this.isShow) {
-      this.getCheckList();
+      this.insGetchecklist();
     }
   },
   methods: {
-    //学生账号获取查寝记录的方法
-    async getCheckList() {
-      let res = await request("/stuDorm", {
-        stunum: this.username,
+    //辅导员账号获取单个寝室历史查寝记录
+    async insGetchecklist() {
+      let res = await request("/getDetailedMsg", {
+        dormNum: this.dormNum,
+        state: this.state,
         currentPage: this.currentPage,
         pageSize: this.pageSize
       });
-      this.dormInfo = res.data.data2;
-      this.total = res.data.data3;
-     /*  const array = res.data.data2;
-      // 去掉时间，保留日期
-      for(let i in array){
-        array[i].checkTime=array[i].checkTime.substring(0,10);  
-      }
-      this.dormInfo = array; */
+      this.insDormInfo = res.data.data2;
+      this.total = res.data.data;
     },
     //监听搜索框的输入
     handleInput(e) {
-      this.value = e.value;
-    },
-    IsInArray(arr, val) {
-      var testStr = "," + arr.join(",") + ",";
-      return testStr.indexOf("," + val + ",") != -1;
+      const val = e.value.trim();
+      if(val == '已读'){
+        this.value = 'read'
+      }else if (val == '未读') {
+        this.value = 'unread'
+      }
     },
     //回车确认搜索
     async handleSearch(e) {
-      const array = ["优秀", "良好", "一般", "较差", "脏乱差"];
-      const flag = this.IsInArray(array, this.value);
-      if (!flag) {
-        wx.showToast({
+      if (this.value == "read" || this.value == "unread") {
+        let res = await request("/findBytime", {
+          state: '',
+          className: this.className,
+          position: "",
+          college: "",
+          isread: this.value,
+          check_time: "",
+          currentPage: "",
+          pageSize: ""
+        });
+        this.insDormInfo = res.data.data2;
+      } else {
+        uni.showToast({
           title: "输入不合法",
           icon: "none"
         });
-        return;
-      } else {
-        this.searchObj.state = this.value;
-        this.searchObj.dormNum = this.dormInfo[0].dormNum;
-        this.searchObj.check_time = "";
-        this.searchObj.currentPage = 1;
-        this.searchObj.pageSize = 10;
-        let res = await request("/findDorm", { ...this.searchObj });
-        this.dormInfo = res.data.data2;
       }
     },
-    //点击取消按钮
+    //点击取消
     async handleCancel() {
-      this.getCheckList();
+      this.insGetchecklist();
     },
-    //点击跳转到反馈页面 发送请求修改是否已读状态
-    async handleToFeedback(e) {
+    // 点击寝室号跳转到查寝记录详情
+    async handleToRecord(e) {
       const id = e.currentTarget.dataset.id;
-      this.dormInfo.some(item => {
+      // 获得并截取查寝角色 
+      const checker = uni.getStorageSync("checker");
+      const index = checker.lastIndexOf("_");
+      const position = checker.substring(index + 1, checker.length);
+      this.insDormInfo.some(item => {
         if (item.id == id) {
           this.queryObj = item;
         }
       });
-      // 发送请求修改已读未读状态
-      await request("/changeStateStu", { ...this.queryObj });
-      // 跳转后修改状态标识
+      delete this.queryObj.version;
+      // 发送请求修改已读状态
+      await request("/changeRead", { ...this.queryObj, position });
+      // 修改状态标识
       this.isShow = true;
       // 将点击的对应查寝对象保存到本地
-      uni.setStorageSync('checkedInfo', this.queryObj);
+      uni.setStorageSync('insDormInfo', this.queryObj);
       uni.navigateTo({
-        url: `/pages/feedback/index?`
-      })
+        url: `/pages/insCheckDetail/index?dormInfo`
+      });
     },
     //点击页码按钮时触发
     handlePageChange(e) {
       this.currentPage = e.current;
-      this.getCheckList();
+      this.insGetchecklist();
     }
   }
 };
@@ -194,6 +198,7 @@ export default {
     height: 100rpx;
     width: 100%;
     padding-bottom: 20rpx;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-around;

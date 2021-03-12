@@ -1,7 +1,7 @@
 //同时发送异步代码的次数
 let ajaxTimes = 0;
 //发送请求
-export default (url, data = {}, method = 'POST') => {
+export default (url, data = {}, method = 'POST',) => {
     ajaxTimes++;
     //显示加载中效果
     uni.showLoading({

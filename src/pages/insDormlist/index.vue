@@ -1,5 +1,5 @@
 <template>
-  <view class="indexContainer">
+  <view class="Container">
     <!-- 下拉选择输入框选择栋数、层数 -->
     <view class="title">
       <view class="select">
@@ -36,7 +36,7 @@
             :key="item.id"
             @click="handleToDorm"
             :data-id="index"
-            :data-dormNum="item.dormNum"
+            :data-dormnum="item.dormNum"
             :data-ischeck="item.ischeck"
           >
             {{ item.dormNum }}
@@ -57,18 +57,21 @@ export default {
   },
   data() {
     return {
+      checker:'', //查寝角色
       tung: "", //选取的栋数
       layer: "", //选取的层数
       flag: false,
-      dormList: [], //请求过来的寝室列表信息
+      dormList: [], //请求的寝室列表信息
       collegeList: [], //请求返回的学院信息
-      dormnum: "", //选取的寝室id
+      dormnum: "", //选取的寝室号
       className: "", //请求返回的班级信息
       Tungs: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
       layers: ["1", "2", "3", "4", "5", "6"]
     };
   },
-  onLoad() {},
+  onLoad(args) {
+    this.checker = args.checker;
+  },
   onShow() {
     if (this.tung && this.layer) {
       this.getDormData();
@@ -128,17 +131,17 @@ export default {
         return;
       }
       let className = this.dormList[id].className;
-      const _this = this;
       wx.navigateTo({
         url: "/pages/checkform/index",
-        success: function(res) {
+        success: (res)=> {
           // 通过eventChannel向被打开页面传送数据
+          const tung = this.tung + "栋";
           res.eventChannel.emit("acceptDataFromOpenerPage", {
-            tung: _this.tung,
-            layer: _this.layer,
-            collegeList: _this.collegeList,
+            college: this.collegeList[0],
+            tung,
             dormnum,
-            className
+            className,
+            checker:this.checker
           });
         }
       });
@@ -148,7 +151,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.indexContainer {
+.Container {
   flex-direction: column;
   .title {
     display: flex;
@@ -191,7 +194,7 @@ export default {
           color: gray;
         }
         .doremItem {
-          height: 120rpx;
+          height: 100rpx;
           display: flex;
           justify-content: center;
           align-items: center;

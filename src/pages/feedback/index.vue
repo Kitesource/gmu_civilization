@@ -1,31 +1,43 @@
 <template>
-  <view class="container" v-if="Object.keys(checkedInfo).length">
+  <view class="container">
     <view class="title">
       <text>寝室:{{ checkedInfo.dormNum }}</text>
-      <text class="date">查寝时间:{{ checkedInfo.checkTime }}</text>
     </view>
     <view class="content">
       <!-- 查寝记录 -->
       <view class="checkInfo">
-        <view class="checked_title">查寝描述:</view>
+        <view class="checker">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>查寝用户:</text
+          ><text class="role">{{ checkedInfo.checker }}</text>
+        </view>
+        <view class="checkedTime">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>查寝时间:</text>
+          <text class="time">{{ checkedInfo.checkTime }}</text>
+        </view>
         <view class="des_content">
-          {{ checkedInfo.qualifiedDescribe || checkedInfo.unqualifiedDescribe }}
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>查寝描述:</text>
+          <view v-if="checkedDes === null">无</view>
+          <view v-else>{{ checkedDes }}</view>
         </view>
-        <view class="checked_title"
-          >查寝照片:
-          <icon type="info" color="gray" size="12" />
-          <text class="tip">点击可预览图片</text>
-        </view>
-        <view class="pic_content">
-          <view
-            class="checkedImg_item"
-            v-for="(item, index) in urlList"
-            :key="item"
-            :data-path="index"
-            @click="PreviewCheckedImg"
-          >
-            <image v-if="urlList.length" :src="item" />
-          </view>
+        <view class="checked_pic">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>查寝照片:</text>
+            <view class="pic_content">
+              <block v-if="urlList.length">
+                <view
+                  class="checkedImg_item"
+                  v-for="(item, index) in urlList"
+                  :key="index"
+                  :data-path="index"
+                  @click="PreviewCheckedImg"
+                >
+                  <image  :src="item" />
+                </view>
+              </block>
+            </view>
         </view>
       </view>
       <!-- 反馈信息 -->
@@ -45,7 +57,7 @@
           <text class="icon">*</text>
           反馈照片:
           <icon type="info" color="gray" size="12" />
-          <text class="tip">长按可选择删除</text>
+          <text class="tip">点击可预览图片,长按可选择删除</text>
         </view>
         <view class="fb_imges">
           <button @click="handleAddImg">+</button>
@@ -81,33 +93,32 @@ export default {
     return {
       username: "", //学生登录账号
       checkedInfo: {}, //当天查寝信息
-      value: "", //反馈描述
+      checkedDes: "", //查寝描述
       urlList: [], //查寝照片
+      value: "", //反馈描述
       chooseImgs: [],
       uploadImgs: [],
     };
   },
   //监听页面加载
   onLoad(options) {
-    this.username = options.username;
-    let id = options.id;
-    this.getCheckList(id);
+    this.checkedInfo = uni.getStorageSync('checkedInfo');
+    // 获取查寝描述
+      this.checkedDes = this.checkedInfo.qualifiedDescribe || this.checkedInfo.unqualifiedDescribe;
+      // 分割图片路径字符串
+      let url = this.checkedInfo.qualifiedPicture || this.checkedInfo.unqualifiedPicture;
+      if (!this.isEmpty(url)) {
+        this.urlList = url.split(",");
+      }
   },
   methods: {
-    //获取查寝记录的方法
-    async getCheckList(id) {
-      let res = await request("/stuDorm", { stunum: this.username });
-      let dormInfo = res.data.data2;
-      dormInfo.some(item => {
-        if (item.id == id) {
-          this.checkedInfo = item;
-        }
-      });
-      // 分割图片路径字符串
-      let url =
-        this.checkedInfo.qualifiedPicture ||
-        this.checkedInfo.unqualifiedPicture;
-      this.urlList = url.split(",");
+    // 判断字符串是否为空
+    isEmpty(str) {
+      if (typeof str == "undefined" || str == null || str == "") {
+        return true;
+      } else {
+        return false;
+      }
     },
     //点击查寝图片预览大图
     PreviewCheckedImg(event) {
@@ -234,9 +245,6 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: #e6f3f9;
-    .date {
-      font-size: 28rpx;
-    }
   }
   .content {
     width: 100%;
@@ -247,49 +255,61 @@ export default {
     .checkInfo {
       flex: 4;
       width: 100%;
-      .checked_title {
-        margin: 20rpx 0;
-        .icon {
-          color: red;
+      .checker {
+        margin-top: 20rpx;
+        .role {
+          margin-left: 10rpx;
         }
-        .tip {
-          color: #666;
-          font-size: 26rpx;
+      }
+      .checkedTime {
+        margin-top: 20rpx;
+        .time {
+          margin-left: 10rpx;
         }
       }
       .des_content {
-        height: 25%;
-        padding: 20rpx;
-        font-size: 30rpx;
-        border: 1rpx solid #ccc;
+        margin-top: 20rpx;
         border-radius: 10rpx;
         display: flex;
-        flex-wrap: wrap;
+        view {
+          margin-left: 10rpx;
+          width: 75%;
+          font-size: 30rpx;
+        }
       }
-      .pic_content {
-        width: 100%;
-        height: 35%;
-        border: 1rpx solid #ccc;
-        border-radius: 10rpx;
+      .checked_pic {
+        margin-top: 40rpx;
         display: flex;
-        justify-content: space-evenly;
         align-items: center;
-        .checkedImg_item {
-          width: 120rpx;
-          height: 120rpx;
-          image {
-            width: 100%;
-            height: 100%;
-            border-radius: 15rpx;
+        .pic_content {
+          width: 75%;
+          height: 150rpx;
+          border: 1rpx solid #ccc;
+          margin-left: 10rpx;
+          border-radius: 10rpx;
+          display: flex;
+          align-items: center;
+          margin-left: 10rpx;
+          .checkedImg_item {
+            width: 120rpx;
+            height: 120rpx;
+            margin-left: 40rpx;
+            image {
+              width: 100%;
+              height: 100%;
+              border-radius: 15rpx;
+            }
           }
         }
       }
     }
     .feedbackInfo {
-      flex: 4;
+      flex: 5;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
       .fb_title {
-        margin: 20rpx 0;
         .icon {
           color: red;
         }
@@ -335,7 +355,6 @@ export default {
       }
     }
     .btn_wrap {
-      margin-top: 20rpx;
       flex: 1;
       width: 100%;
       display: flex;
