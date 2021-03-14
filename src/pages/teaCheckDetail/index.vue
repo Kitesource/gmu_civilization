@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="title">
-      <text>寝室:{{ insDormInfo.dormNum }}</text>
+      <text>寝室:{{ teaDormInfo.dormNum }}</text>
     </view>
     <view class="content">
       <!-- 查寝记录 -->
@@ -9,12 +9,12 @@
         <view class="checker">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>查寝用户:</text
-          ><text class="role">{{ insDormInfo.checker }}</text>
+          ><text class="role">{{ teaDormInfo.checker }}</text>
         </view>
         <view class="checkedTime">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>查寝时间:</text>
-          <text class="time">{{ insDormInfo.checkTime }}</text>
+          <text class="time">{{ teaDormInfo.checkTime }}</text>
         </view>
         <view class="des_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
@@ -51,7 +51,7 @@
 export default {
   data() {
     return {
-      insDormInfo: {}, //查寝信息对象
+      teaDormInfo: {}, //查寝信息对象
       urlList: [], //图片数组
     };
   },
@@ -61,18 +61,18 @@ export default {
   methods: {
     // 获取本地存储的信息对象
     getCheckedInfo() {
-      this.insDormInfo = uni.getStorageSync("insDormInfo");
+      this.teaDormInfo = uni.getStorageSync("teaDormInfo");
       // 获取查寝描述
-      this.checkedDes = this.insDormInfo.qualifiedDescribe || this.insDormInfo.unqualifiedDescribe;
+      this.checkedDes = this.teaDormInfo.qualifiedDescribe || this.teaDormInfo.unqualifiedDescribe;
       // 分割图片路径字符串
-      let url = this.insDormInfo.qualifiedPicture || this.insDormInfo.unqualifiedPicture;
+      let url = this.teaDormInfo.qualifiedPicture || this.teaDormInfo.unqualifiedPicture;
       if (!(typeof url == "undefined" || url == 'null' || url == "")) {
         this.urlList = url.split(",");
       }
     },
     // 新增评价
     addCheck() {
-      let { college, tung, dormNum, className } = this.insDormInfo;
+      let { college, tung, dormNum, className } = this.teaDormInfo;
       const checker = uni.getStorageSync("checker");
       wx.navigateTo({
         url: "/pages/checkform/index",

@@ -6,11 +6,11 @@
       <view class="input-content">
         <view class="input-item">
           <image src="/static/login/user.png" />
-          <input type="text" placeholder="请输入学号" v-model="username" @input="handleInUser"/>
+          <input type="text" placeholder="请输入学号" v-model="username" :maxlength="maxlength"/>
         </view>
         <view class="input-item">
           <image src="/static/login/psd.png" />
-          <input type="password" placeholder="请输入密码" v-model="password" @input="handleInPwd"/>
+          <input type="password" placeholder="请输入密码" v-model="password" :maxlength="maxlength"/>
         </view>
       </view>
       <button
@@ -30,8 +30,8 @@
     <e-modal :visible.sync="visible">
       <view class="popup">
         <view class="info" v-if="flag"><icon type="warn" size="16"></icon>登录失败</view>
-        <view class="username"><text>*</text>账号<input v-model="user" type="text" value=""/></view>
-        <view class="password"><text>*</text>密码<input v-model="pwd" type="password" value=""/></view>
+        <view class="username"><text>*</text>账号<input v-model="user" type="text"/></view>
+        <view class="password"><text>*</text>密码<input v-model="pwd" type="password"/></view>
         <button type="primary" @click="Login">登录</button>
       </view>
     </e-modal>
@@ -46,6 +46,7 @@ export default {
     return {
       username: "",
       password: "",
+      maxlength:15, //输入框最大输入长度
       visible: false,
       flag:false, //控制是否显示‘登录失败’
       user:"",
@@ -53,13 +54,6 @@ export default {
     };
   },
   methods: {
-    //表单项内容发生改变
-    handleInUser(e) {
-      this.username = e.detail.value;
-    },
-    handleInPwd(e) {
-      this.password = e.detail.value;
-    },
     //点击登录
     async login() {
       // 1. 收集表单项数据
@@ -89,6 +83,7 @@ export default {
         uni.showToast({
           title: "登录成功",
         });
+        console.log(result);
         uni.setStorageSync("JSESSIONID", result.cookies[0]);
         const users = result.data.data.role;
         //登录成功后跳转至选择寝室列表界面,判断角色
@@ -107,10 +102,10 @@ export default {
           uni.navigateTo({
             url: `/pages/teaDormlist/index?username=${this.username}&checker=${users}`,
           });
-        } else if (users == "ROLE_instructor") {
+        } else if (users == "ROLE_instructor" || users == "ROLE_deputySecretary" || user=="ROLE_dean") {
           //辅导员
           uni.reLaunch({
-            url: `/pages/insDormlist/index?checker=${users}`,
+            url: `/pages/insDormlist/index`,
           });
           uni.setStorageSync('checker', users);
         }
@@ -204,10 +199,8 @@ export default {
           flex: 1;
           height: 80rpx;
           line-height: 80rpx;
-          font-size: 28rpx;
-          color: #303133;
+          font-size: 30rpx;
           width: 100%;
-          font-size: 32rpx;
         }
         &:last-child {
           margin-bottom: 0;

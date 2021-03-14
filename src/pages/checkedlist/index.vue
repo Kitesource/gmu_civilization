@@ -14,7 +14,7 @@
       <!-- <text>查寝日期</text>
       <text>是否合格</text>
       <text>是否已读</text> -->
-      <uni-tag text="查寝时间" type="primary" :inverted="true"></uni-tag>
+      <uni-tag text="走访时间" type="primary" :inverted="true"></uni-tag>
       <uni-tag text="合格状态" type="primary" :inverted="true"></uni-tag>
       <uni-tag text="是否已读" type="primary" :inverted="true"></uni-tag>
     </view>

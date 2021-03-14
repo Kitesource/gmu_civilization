@@ -7,16 +7,21 @@
 			}
 		},
 		{
+			"path": "pages/revisePwd/index",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},
+		{
 			"path": "pages/stuDormlist/index",
 			"style": {
 				"navigationBarTitleText": "寝室列表"
 			}
 		},
-		
 		{
 			"path": "pages/checkedlist/index",
 			"style": {
-				"navigationBarTitleText": "查寝记录"
+				"navigationBarTitleText": "走访记录"
 			}
 		},
 		{
@@ -31,6 +36,7 @@
 				"navigationBarTitleText": "反馈页面"
 			}
 		},
+
 		{
 			"path": "pages/teaDormlist/index",
 			"style": {
@@ -38,9 +44,28 @@
 			}
 		},
 		{
+			"path": "pages/teaRecordMsg/index",
+			"style": {
+				"navigationBarTitleText": "查寝记录"
+			}
+		},
+		{
+			"path": "pages/teaCheckDetail/index",
+			"style": {
+				"navigationBarTitleText": "查寝详情"
+			}
+		},
+
+		{
 			"path": "pages/insDormlist/index",
 			"style": {
 				"navigationBarTitleText": "寝室列表"
+			}
+		},
+		{
+			"path": "pages/insRanking/index",
+			"style": {
+				"navigationBarTitleText": "排行榜"
 			}
 		},
 		{
@@ -60,12 +85,6 @@
 			"style": {
 				"navigationBarTitleText": "查寝详情"
 			}
-		},
-		{
-			"path": "pages/revisePwd/index",
-			"style": {
-				"navigationBarTitleText": "修改密码"
-			}
 		}
 	],
 	"globalStyle": {
@@ -76,7 +95,7 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
-    "color": "#cccccc",
+    "color": "#515151",
     "selectedColor": "#00702B",
     "backgroundColor": "#fafafa",
     "borderStyle": "black",
@@ -89,9 +108,15 @@
       },
       {
         "pagePath": "pages/insRecordlist/index",
-        "text": "查寝记录",
+        "text": "班级寝室",
         "iconPath": "/static/navs/record.png",
         "selectedIconPath": "/static/navs/record_active.png"
+      },
+			{
+        "pagePath": "pages/insRanking/index",
+        "text": "排行榜",
+        "iconPath": "/static/navs/ranking.png",
+        "selectedIconPath": "/static/navs/ranking_active.png"
       }
     ]
   }

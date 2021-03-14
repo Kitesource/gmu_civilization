@@ -188,6 +188,7 @@ export default {
         })
       }
     },
+    // 监听radio-group选中项发生变化时触发change事件
     selectedRadio(e) {
       this.state = e.detail.value;
       if( (e.detail.value == "较差") || (e.detail.value == "脏乱差")){
@@ -307,16 +308,15 @@ export default {
     },
     //点击重置按钮
     reset() {
-      const _this = this;
       uni.showModal({
         title: "提示",
         content: "确认要重置吗",
-        success: function (res) {
+        success:(res)=> {
           if (res.confirm) {
-            _this.qualifiedDescribe = "";
-            _this.unqualifiedDescribe = "";
-            _this.chooseImgs = [];
-            _this.unChooseImgs = [];
+            this.qualifiedDescribe = "";
+            this.unqualifiedDescribe = "";
+            this.chooseImgs = [];
+            this.unChooseImgs = [];
           } else if (res.cancel) {
             return;
           }
@@ -332,16 +332,8 @@ export default {
       } else {
         this.unqualifiedPicture = this.unUploadImgs.join(",");
       }
-      /* //是否选择了学院
-      if (this.college == "") {
-        uni.showToast({
-          title: "请先选择学院~",
-          icon: "none",
-        });
-        return;
-      } */
       // 发送请求
-      if (this.isSelected) {
+      if (this.qualified) {
         //合格
         if (this.chooseImgs.length != 0 && this.uploadImgs.length == 0) {
           uni.showToast({
@@ -353,22 +345,23 @@ export default {
         uni.showModal({
           title: "提示",
           content: "确认提交吗？",
-          success: async function (res) {
+          success: async (res)=> {
             if (res.confirm) {
               //用户点击确定
               let result = await request("/insertcheckdorm", {
-                tung: _this.tung,
-                dormNum: _this.dormnum,
-                checkTime: _this.checkTime,
-                college: _this.college,
-                className: _this.className,
-                state: _this.state,
-                qualifiedDescribe: _this.qualifiedDescribe,
+                tung: this.tung,
+                dormNum: this.dormnum,
+                checkTime: this.checkTime,
+                college: this.college,
+                className: this.className,
+                state: this.state,
+                qualifiedDescribe: this.qualifiedDescribe,
                 unqualifiedDescribe: "",
-                qualifiedPicture: _this.qualifiedPicture,
+                qualifiedPicture: this.qualifiedPicture,
                 unqualifiedPicture: "",
-                checker:_this.checker
+                checker:this.checker
               });
+              console.log(res);
               if (result.data.code === 200) {
                 uni.showToast({
                   title: "提交成功~",
@@ -398,9 +391,9 @@ export default {
           });
           return;
         }
-        if (!this.unUploadImgs) {
+        if (!this.unUploadImgs.length) {
           uni.showToast({
-            title: "请先添加图片！",
+            title: "请先上传图片！",
             icon: "none",
           });
           return;
@@ -408,20 +401,20 @@ export default {
         uni.showModal({
           title: "提交",
           content: "确认提交吗？",
-          success: async function (res) {
+          success: async (res)=> {
             if (res.confirm) {
               //用户点击确定
               let result = await request("/insertcheckdorm", {
-                tung: _this.tung,
-                dormNum: _this.dormnum,
-                checkTime: _this.checkTime,
-                college: _this.college,
-                className: _this.className,
-                state: _this.state,
+                tung: this.tung,
+                dormNum: this.dormnum,
+                checkTime: this.checkTime,
+                college: this.college,
+                className: this.className,
+                state: this.state,
                 qualifiedDescribe: "",
-                unqualifiedDescribe: _this.unqualifiedDescribe,
+                unqualifiedDescribe: this.unqualifiedDescribe,
                 qualifiedPicture: "",
-                unqualifiedPicture: _this.unqualifiedPicture,
+                unqualifiedPicture: this.unqualifiedPicture,
                 checker:_this.checker
               });
               if (result.data.code === 200) {
@@ -490,7 +483,7 @@ export default {
       display: flex;
       align-items: center;
       text:not(:first-child){
-        margin-left: 10rpx;
+        margin-left: 20rpx;
       }
     }
     .currentTime{

@@ -94,18 +94,20 @@ export default {
       currentPage: 1, //为当前页
       pageSize: 15,
       total:0,
-      isShow: false //
+      isShow: false, //onShow中的函数是否执行
+      flag:true, //控制点击上一页/下一页发送哪个请求
     };
   },
   //监听页面加载
   onLoad(options) {
     this.dormNum = options.dormNum;
-    this.state = options.state;
     this.className = options.className;
     this.insGetchecklist();
   },
   onShow() {
-    if (this.isShow) {
+    if (!this.flag && this.isShow) {
+      this.handleSearch();
+    }else{
       this.insGetchecklist();
     }
   },
@@ -114,7 +116,8 @@ export default {
     async insGetchecklist() {
       let res = await request("/getDetailedMsg", {
         dormNum: this.dormNum,
-        state: this.state,
+        className: this.className,
+        state: '',
         currentPage: this.currentPage,
         pageSize: this.pageSize
       });
@@ -131,7 +134,7 @@ export default {
       }
     },
     //回车确认搜索
-    async handleSearch(e) {
+    async handleSearch() {
       if (this.value == "read" || this.value == "unread") {
         let res = await request("/findBytime", {
           state: '',
@@ -140,10 +143,13 @@ export default {
           college: "",
           isread: this.value,
           check_time: "",
-          currentPage: "",
-          pageSize: ""
+          currentPage: this.currentPage,
+          pageSize: this.pageSize
         });
+        // 搜索请求成功后，使flag变为false
+        this.flag = false;
         this.insDormInfo = res.data.data2;
+        this.total = res.data.message;
       } else {
         uni.showToast({
           title: "输入不合法",
@@ -153,6 +159,8 @@ export default {
     },
     //点击取消
     async handleCancel() {
+      // 使flag变为true，之后点击上一页/下一页就是全部的数据
+      this.flag = true;
       this.insGetchecklist();
     },
     // 点击寝室号跳转到查寝记录详情
@@ -173,15 +181,20 @@ export default {
       // 修改状态标识
       this.isShow = true;
       // 将点击的对应查寝对象保存到本地
-      uni.setStorageSync('insDormInfo', this.queryObj);
+      uni.setStorageSync('teaDormInfo', this.queryObj);
       uni.navigateTo({
-        url: `/pages/insCheckDetail/index`
+        url: `/pages/teaCheckDetail/index?`
       });
     },
     //点击页码按钮时触发
     handlePageChange(e) {
-      this.currentPage = e.current;
-      this.insGetchecklist();
+      if(this.flag){
+        this.currentPage = e.current;
+        this.insGetchecklist();
+      }else{
+        this.currentPage = e.current;
+        this.handleSearch();
+      }
     }
   }
 };

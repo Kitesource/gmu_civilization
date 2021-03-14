@@ -8,23 +8,23 @@
       <view class="checkInfo">
         <view class="checker">
           <icon type="success_no_circle" size="10" color="#ccc" />
-          <text>查寝用户:</text
+          <text>走访人员:</text
           ><text class="role">{{ checkedInfo.checker }}</text>
         </view>
         <view class="checkedTime">
           <icon type="success_no_circle" size="10" color="#ccc" />
-          <text>查寝时间:</text>
+          <text>走访时间:</text>
           <text class="time">{{ checkedInfo.checkTime }}</text>
         </view>
         <view class="des_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
-          <text>查寝描述:</text>
+          <text>走访描述:</text>
           <view v-if="checkedDes === null">无</view>
           <view v-else>{{ checkedDes }}</view>
         </view>
         <view class="checked_pic">
           <icon type="success_no_circle" size="10" color="#ccc" />
-          <text>查寝照片:</text>
+          <text>走访照片:</text>
             <view class="pic_content">
               <block v-if="urlList.length">
                 <view
@@ -101,23 +101,19 @@ export default {
     };
   },
   //监听页面加载
-  onLoad(options) {
-    this.checkedInfo = uni.getStorageSync('checkedInfo');
-    // 获取查寝描述
+  onShow() {
+    this.getCheckedInfo();
+  },
+  methods: {
+    // 获取本地存储的信息对象
+    getCheckedInfo() {
+      this.checkedInfo = uni.getStorageSync('checkedInfo');
+      // 获取查寝描述
       this.checkedDes = this.checkedInfo.qualifiedDescribe || this.checkedInfo.unqualifiedDescribe;
       // 分割图片路径字符串
       let url = this.checkedInfo.qualifiedPicture || this.checkedInfo.unqualifiedPicture;
-      if (!this.isEmpty(url)) {
+      if (!( url == 'null' || url == "")) {
         this.urlList = url.split(",");
-      }
-  },
-  methods: {
-    // 判断字符串是否为空
-    isEmpty(str) {
-      if (typeof str == "undefined" || str == null || str == "") {
-        return true;
-      } else {
-        return false;
       }
     },
     //点击查寝图片预览大图

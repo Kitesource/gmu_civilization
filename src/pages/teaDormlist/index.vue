@@ -10,9 +10,7 @@
         :key="item.id"
         :data-tung="item.tung"
         :data-dormnum="item.dormNum"
-        :data-college="item.college"
-        :data-ischeck="item.ischeck"
-        @click="handleToForm"
+        @click="handleToRecordMsg"
       >
         {{ item.dormNum }}
         <text :class="item.ischeck == 'check' ? 'checked' : ''"></text>
@@ -60,32 +58,12 @@ export default {
       );
       this.className = this.dormList[0].className;
     },
-    //点击寝室号跳转到寝室评价表单页面
-    handleToForm(e) {
-      let { ischeck, dormnum, college, tung } = e.currentTarget.dataset;
-      if (ischeck == "check") {
-        wx.showToast({
-          title: "该寝室已完成检查！",
-          icon: "none",
-        });
-        return;
-      }
-      const _this = this;
-      wx.navigateTo({
-        url: "/pages/checkform/index",
-        success: function (res) {
-          // 通过eventChannel向被打开页面传送数据
-          res.eventChannel.emit("acceptDataFromOpenerPage", {
-            tung,
-            college,
-            dormnum,
-            className: _this.className,
-            checker:_this.checker
-          });
-        },
+    handleToRecordMsg(e) {
+      const {dormnum} = e.currentTarget.dataset;
+      uni.navigateTo({
+         url: `/pages/teaRecordMsg/index?dormNum=${dormnum}&className=${this.className}`
       });
-      this.flag = true;
-    },
+    }
   },
 };
 </script>

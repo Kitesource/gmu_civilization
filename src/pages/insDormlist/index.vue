@@ -23,7 +23,7 @@
     <view class="dorm_detail">
       <!-- 默认信息 -->
       <view class="default" v-if="!dormList.length">
-        <p>Please select information first...</p>
+        <p>Please select tung and layer first...</p>
       </view>
       <!-- 寝室信息 -->
       <view class="dormList" v-else>
@@ -68,9 +68,6 @@ export default {
       Tungs: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
       layers: ["1", "2", "3", "4", "5", "6"]
     };
-  },
-  onLoad(args) {
-    this.checker = args.checker;
   },
   onShow() {
     if (this.tung && this.layer) {
@@ -136,12 +133,13 @@ export default {
         success: (res)=> {
           // 通过eventChannel向被打开页面传送数据
           const tung = this.tung + "栋";
+          const checker = uni.getStorageSync('checker')
           res.eventChannel.emit("acceptDataFromOpenerPage", {
             college: this.collegeList[0],
             tung,
             dormnum,
             className,
-            checker:this.checker
+            checker
           });
         }
       });

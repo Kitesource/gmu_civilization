@@ -12,11 +12,11 @@
     <view class="content">
       <!-- 默认信息 -->
       <view class="default" v-if="!recordList.length">
-        <p>Please select information first...</p>
+        <p>Please select className and  state first...</p>
       </view>
       <!-- 寝室信息 -->
       <view class="dormList" v-else>
-        <view class="title">按{{state}}降序排列</view>
+        <view class="title">按<text>{{state}}</text>降序排列</view>
         <scroll-view class="scrollView" scroll-y>
           <view
             class='dormItem'
@@ -65,7 +65,7 @@ export default {
     },
     // 点击确定获取查寝信息
     async handleConfirm() {
-      if(this.className || this.state){
+      if(this.className && this.state){
       let result = await request("/getStateAndCount", {
         college:this.college,
         className:this.className,
@@ -83,7 +83,7 @@ export default {
       this.recordList = arr.sort(this.handleSort('message'));
       }else{
         uni.showToast({
-          title: '请至少选择一个条件',
+          title: '请选择班级和状态',
           icon: 'none'
         })
         return;
@@ -97,6 +97,7 @@ export default {
         return val2 - val1;
       }
     },
+    // 点击寝室号跳转至对应寝室查寝记录列表页面
     handleToRecord(e) {
       const {dormnum} = e.currentTarget.dataset;
       uni.navigateTo({
@@ -145,6 +146,9 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        text{
+          color:#007AFF;
+        }
       }
       .scrollView {
         height: calc(100vh - 80px);
