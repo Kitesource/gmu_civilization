@@ -25,6 +25,13 @@ export default {
   },
   methods:{
     async confirm() {
+      if(!this.newPwd){
+        uni.showToast({
+          title: '密码不能为空',
+          icon: 'none'
+        })
+        return;
+      }
       if(this.oldPwd === this.newPwd){
         uni.showToast({
           title: '原密码和新密码不能一致',

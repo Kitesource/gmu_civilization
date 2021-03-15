@@ -63,6 +63,12 @@
 			}
 		},
 		{
+			"path": "pages/insDormCheck/index",
+			"style": {
+				"navigationBarTitleText": "查寝记录"
+			}
+		},
+		{
 			"path": "pages/insRanking/index",
 			"style": {
 				"navigationBarTitleText": "排行榜"
@@ -108,7 +114,7 @@
       },
       {
         "pagePath": "pages/insRecordlist/index",
-        "text": "班级寝室",
+        "text": "历史记录",
         "iconPath": "/static/navs/record.png",
         "selectedIconPath": "/static/navs/record_active.png"
       },

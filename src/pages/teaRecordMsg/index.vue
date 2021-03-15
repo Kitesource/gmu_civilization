@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <uni-search-bar
+    <!-- <uni-search-bar
       class="uniSearch"
       :radius="100"
       :maxlength="10"
@@ -9,7 +9,11 @@
       @input="handleInput"
       @confirm="handleSearch"
       @cancel="handleCancel"
-    ></uni-search-bar>
+    ></uni-search-bar> -->
+    <view class="title">
+      <view class="dormnum"><text>{{dormnum}}</text></view>
+      <view class="btn"><button type="primary" @click="addCheck">新增走访</button></view>
+    </view>
     <view class="scroll_title">
       <!-- <text>查寝日期</text>
       <text>是否合格</text>
@@ -84,8 +88,7 @@ export default {
   data() {
     return {
       insDormInfo: [], //辅导员账号时间截取后寝室查寝记录数组
-      checkTime: "",
-      dormNum: "",
+      dormnum: "",
       className: "",
       state: "",
       dateList: [], //查寝日期数组
@@ -100,8 +103,11 @@ export default {
   },
   //监听页面加载
   onLoad(options) {
-    this.dormNum = options.dormNum;
+    this.dormnum = options.dormnum;
     this.className = options.className;
+    this.tung = options.tung;
+    this.college = options.college;
+    this.checker = options.checker;
     this.insGetchecklist();
   },
   onShow() {
@@ -112,19 +118,36 @@ export default {
     }
   },
   methods: {
-    //辅导员账号获取单个寝室历史查寝记录
+    //班主任账号获取单个寝室历史查寝记录
     async insGetchecklist() {
       let res = await request("/getDetailedMsg", {
-        dormNum: this.dormNum,
+        dormNum: this.dormnum,
         className: this.className,
         state: '',
         currentPage: this.currentPage,
         pageSize: this.pageSize
       });
+      console.log(res);
       this.insDormInfo = res.data.data2;
       this.total = res.data.data;
     },
-    //监听搜索框的输入
+    // 新增评价
+    addCheck() {
+      uni.navigateTo({
+        url: "/pages/checkform/index",
+        success: (res)=> {
+          // 通过eventChannel向被打开页面传送数据
+          res.eventChannel.emit("acceptDataFromOpenerPage", {
+            college: this.college,
+            tung:this.tung,
+            dormnum:this.dormnum,
+            className:this.className,
+            checker:this.checker
+          });
+        }
+      });
+    },
+    /* //监听搜索框的输入
     handleInput(e) {
       const val = e.value.trim();
       if(val == '已读'){
@@ -162,7 +185,7 @@ export default {
       // 使flag变为true，之后点击上一页/下一页就是全部的数据
       this.flag = true;
       this.insGetchecklist();
-    },
+    }, */
     // 点击寝室号跳转到查寝记录详情
     async handleToRecord(e) {
       const id = e.currentTarget.dataset.id;
@@ -188,11 +211,10 @@ export default {
     },
     //点击页码按钮时触发
     handlePageChange(e) {
+      this.currentPage = e.current;
       if(this.flag){
-        this.currentPage = e.current;
         this.insGetchecklist();
       }else{
-        this.currentPage = e.current;
         this.handleSearch();
       }
     }
@@ -203,9 +225,37 @@ export default {
 <style lang="scss" scoped>
 .container {
   height: 100%;
-  .uniSearch {
+  /* .uniSearch {
     width: 100%;
     height: 80rpx;
+  } */
+  .title{
+    display: flex;
+    height: 100rpx;
+    .dormnum{
+      flex: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text{
+        height: 70rpx;
+        line-height: 70rpx;
+        padding: 0 10rpx;
+        background-color: #007AFF;
+        color: #fff;
+        border-radius: 10rpx;
+      }
+    }
+    .btn{
+      flex: 6;
+      display: flex;
+      align-items: center;
+      button{
+        width: 95%;
+        height: 80rpx;
+        line-height: 80rpx;
+      }
+    }
   }
   .scroll_title {
     height: 100rpx;

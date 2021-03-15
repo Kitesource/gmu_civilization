@@ -88,7 +88,6 @@ export default {
         className: "",
         state: this.state,
       });
-      console.log(result);
       if (!result.data.data2) {
         uni.showToast({
           title: "暂无数据",

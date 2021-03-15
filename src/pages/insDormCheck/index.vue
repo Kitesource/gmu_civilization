@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <uni-search-bar
+    <!-- <uni-search-bar
       class="uniSearch"
       :radius="100"
       :maxlength="10"
@@ -9,7 +9,11 @@
       @input="handleInput"
       @confirm="handleSearch"
       @cancel="handleCancel"
-    ></uni-search-bar>
+    ></uni-search-bar> -->
+    <view class="title">
+      <view class="dormnum"><text>{{dormnum}}</text></view>
+      <view class="btn"><button type="primary" @click="addCheck">新增走访</button></view>
+    </view>
     <view class="scroll_title">
       <!-- <text>查寝日期</text>
       <text>是否合格</text>
@@ -85,8 +89,10 @@ export default {
     return {
       insDormInfo: [], //辅导员账号时间截取后寝室查寝记录数组
       checkTime: "",
-      dormNum: "",
+      dormnum: "",
       className: "",
+      tung:'',
+      college:'',
       state: "",
       dateList: [], //查寝日期数组
       queryObj: {}, //修改已读状态所需的参数
@@ -94,30 +100,23 @@ export default {
       currentPage: 1, //为当前页
       pageSize: 15,
       total:0,
-      isShow: false, //onShow中的函数是否执行
-      flag:true, //控制点击上一页/下一页发送哪个请求
     };
   },
   //监听页面加载
   onLoad(options) {
-    this.dormNum = options.dormNum;
-    this.state = options.state;
+    this.dormnum = options.dormnum;
+    this.college = options.college;
     this.className = options.className;
-    this.insGetchecklist();
+    this.tung = options.tung;
   },
   onShow() {
-    if (!this.flag && this.isShow) {
-      this.handleSearch();
-    }else{
-      this.insGetchecklist();
-    }
+    this.insGetchecklist();
   },
   methods: {
     //辅导员账号获取单个寝室历史查寝记录
     async insGetchecklist() {
       let res = await request("/getDetailedMsg", {
-        dormNum: this.dormNum,
-        state:this.state,
+        dormNum: this.dormnum,
         currentPage: this.currentPage,
         pageSize: this.pageSize
       });
@@ -126,33 +125,32 @@ export default {
     },
     // 新增评价
     addCheck() {
-      let { college, tung, dormNum, className } = this.insDormInfo;
-      const checker = uni.getStorageSync("checker");
-      wx.navigateTo({
+      uni.navigateTo({
         url: "/pages/checkform/index",
         success: (res)=> {
           // 通过eventChannel向被打开页面传送数据
+          const checker = uni.getStorageSync('checker');
           res.eventChannel.emit("acceptDataFromOpenerPage", {
-            college,
-            tung,
-            dormnum: dormNum,
-            className,
-            checker,
+            college: this.college,
+            tung:this.tung,
+            dormnum:this.dormnum,
+            className:this.className,
+            checker
           });
-        },
+        }
       });
     },
     //监听搜索框的输入
-    handleInput(e) {
+    /* handleInput(e) {
       const val = e.value.trim();
       if(val == '已读'){
         this.value = 'read'
       }else if (val == '未读') {
         this.value = 'unread'
       }
-    },
+    }, */
     //回车确认搜索
-    async handleSearch(e) {
+    /* async handleSearch(e) {
       if (this.value == "read" || this.value == "unread") {
         let res = await request("/findBytime", {
           state: '',
@@ -164,23 +162,18 @@ export default {
           currentPage: "",
           pageSize: ""
         });
-        // 搜索请求成功后，使flag变为false
-        this.flag = false;
         this.insDormInfo = res.data.data2;
-        this.total = res.data.message;
       } else {
         uni.showToast({
           title: "输入不合法",
           icon: "none"
         });
       }
-    },
+    }, */
     //点击取消
-    async handleCancel() {
-      // 使flag变为true，之后点击上一页/下一页就是全部的数据
-      this.flag = true;
+    /* async handleCancel() {
       this.insGetchecklist();
-    },
+    }, */
     // 点击寝室号跳转到查寝记录详情
     async handleToRecord(e) {
       const id = e.currentTarget.dataset.id;
@@ -196,8 +189,6 @@ export default {
       delete this.queryObj.version;
       // 发送请求修改已读状态
       await request("/changeRead", { ...this.queryObj, position });
-      // 修改状态标识
-      this.isShow = true;
       // 将点击的对应查寝对象保存到本地
       uni.setStorageSync('insDormInfo', this.queryObj);
       uni.navigateTo({
@@ -207,11 +198,7 @@ export default {
     //点击页码按钮时触发
     handlePageChange(e) {
       this.currentPage = e.current;
-     if(this.flag){
-        this.insGetchecklist();
-      }else{
-        this.handleSearch();
-      }
+      this.insGetchecklist();
     }
   }
 };
@@ -220,9 +207,37 @@ export default {
 <style lang="scss" scoped>
 .container {
   height: 100%;
-  .uniSearch {
-    width: 100%;
-    height: 80rpx;
+  // .uniSearch {
+  //   width: 100%;
+  //   height: 80rpx;
+  // }
+  .title{
+    display: flex;
+    height: 100rpx;
+    .dormnum{
+      flex: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text{
+        height: 70rpx;
+        line-height: 70rpx;
+        padding: 0 10rpx;
+        background-color: #007AFF;
+        color: #fff;
+        border-radius: 10rpx;
+      }
+    }
+    .btn{
+      flex: 6;
+      display: flex;
+      align-items: center;
+      button{
+        width: 95%;
+        height: 80rpx;
+        line-height: 80rpx;
+      }
+    }
   }
   .scroll_title {
     height: 100rpx;
@@ -236,7 +251,7 @@ export default {
   }
   .sroll_content {
     flex: 1;
-    height: calc(100vh - 132px);
+    height: calc(100vh - 130px);
     .sroll_item {
       height: 94rpx;
       width: 100%;

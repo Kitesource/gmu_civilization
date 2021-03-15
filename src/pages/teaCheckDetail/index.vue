@@ -16,6 +16,11 @@
           <text>查寝时间:</text>
           <text class="time">{{ teaDormInfo.checkTime }}</text>
         </view>
+        <view class="state_wrap">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>合格状态:</text>
+          <text class="state">{{ teaDormInfo.state }}</text>
+        </view>
         <view class="des_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>查寝描述:</text>
@@ -135,11 +140,19 @@ export default {
           margin-left: 10rpx;
         }
       }
+      .state_wrap {
+        flex: 1;
+        margin-top: 20rpx;
+        .state {
+          margin-left: 10rpx;
+        }
+      }
       .des_content {
         flex: 2;
         margin-top: 20rpx;
         border-radius: 10rpx;
         display: flex;
+        align-items: center;
         view {
           margin-left: 10rpx;
           width: 75%;
@@ -148,7 +161,6 @@ export default {
       }
       .checked_pic {
         flex: 4;
-        margin-top: 40rpx;
         display: flex;
         align-items: center;
         .pic_content {

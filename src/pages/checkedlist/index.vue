@@ -93,6 +93,7 @@ export default {
       pageSize: 15,
       total:0,
       isShow: false,//使页面第一次显示不发送请求
+      flag:true, //控制点击上一页/下一页发送哪个请求
     };
   },
   //监听页面加载
@@ -148,12 +149,21 @@ export default {
         this.searchObj.check_time = "";
         this.searchObj.currentPage = 1;
         this.searchObj.pageSize = 10;
-        let res = await request("/findDorm", { ...this.searchObj });
+        let res = await request("/findDorm", { 
+          ...this.searchObj,
+          currentPage: this.currentPage,
+          pageSize: this.pageSize 
+          });
         this.dormInfo = res.data.data2;
+        // 搜索请求成功后，使flag变为false
+        this.flag = false;
+        this.total = res.data.data;
       }
     },
     //点击取消按钮
     async handleCancel() {
+      // 使flag变为true，之后点击上一页/下一页就是全部的数据
+      this.flag = true;
       this.getCheckList();
     },
     //点击跳转到反馈页面 发送请求修改是否已读状态
@@ -177,7 +187,11 @@ export default {
     //点击页码按钮时触发
     handlePageChange(e) {
       this.currentPage = e.current;
-      this.getCheckList();
+      if(this.flag){
+        this.getCheckList();
+      }else{
+        this.handleSearch();
+      }
     }
   }
 };

@@ -83,7 +83,6 @@ export default {
         uni.showToast({
           title: "登录成功",
         });
-        console.log(result);
         uni.setStorageSync("JSESSIONID", result.cookies[0]);
         const users = result.data.data.role;
         //登录成功后跳转至选择寝室列表界面,判断角色

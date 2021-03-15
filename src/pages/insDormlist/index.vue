@@ -65,7 +65,7 @@ export default {
       collegeList: [], //请求返回的学院信息
       dormnum: "", //选取的寝室号
       className: "", //请求返回的班级信息
-      Tungs: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+      Tungs: ["4", "5", "6", "7", "8"],
       layers: ["1", "2", "3", "4", "5", "6"]
     };
   },
@@ -118,17 +118,17 @@ export default {
       }
     },
     //点击寝室号跳转到寝室评价表单页面
-    handleToDorm(e) {
+    /* handleToDorm(e) {
       let { ischeck, dormnum, id } = e.currentTarget.dataset;
       if (ischeck == "check") {
-        wx.showToast({
+        uni.showToast({
           title: "该寝室已完成检查！",
           icon: "none"
         });
         return;
       }
       let className = this.dormList[id].className;
-      wx.navigateTo({
+      uni.navigateTo({
         url: "/pages/checkform/index",
         success: (res)=> {
           // 通过eventChannel向被打开页面传送数据
@@ -142,6 +142,22 @@ export default {
             checker
           });
         }
+      });
+    } */
+    handleToDorm(e) {
+      let { ischeck, dormnum, id } = e.currentTarget.dataset;
+      if (ischeck == "check") {
+        uni.showToast({
+          title: "该寝室已完成检查！",
+          icon: "none"
+        });
+        return;
+      }
+      let className = this.dormList[id].className;
+      const tung = this.tung + "栋";
+      const college = this.collegeList[0];
+      uni.navigateTo({
+         url: `/pages/insDormCheck/index?college=${college}&className=${className}&tung=${tung}&dormnum=${dormnum}`
       });
     }
   }

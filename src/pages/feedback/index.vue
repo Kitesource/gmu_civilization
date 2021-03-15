@@ -16,10 +16,15 @@
           <text>走访时间:</text>
           <text class="time">{{ checkedInfo.checkTime }}</text>
         </view>
+        <view class="state_wrap">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>合格状态:</text>
+          <text class="state">{{ checkedInfo.state }}</text>
+        </view>
         <view class="des_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>走访描述:</text>
-          <view v-if="checkedDes === null">无</view>
+          <view v-if="checkedDes === 'null'">无</view>
           <view v-else>{{ checkedDes }}</view>
         </view>
         <view class="checked_pic">
@@ -260,6 +265,12 @@ export default {
       .checkedTime {
         margin-top: 20rpx;
         .time {
+          margin-left: 10rpx;
+        }
+      }
+      .state_wrap{
+        margin-top: 20rpx;
+        .state{
           margin-left: 10rpx;
         }
       }

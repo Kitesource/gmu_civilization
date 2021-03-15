@@ -10,6 +10,7 @@
         :key="item.id"
         :data-tung="item.tung"
         :data-dormnum="item.dormNum"
+        :data-college="item.college"
         @click="handleToRecordMsg"
       >
         {{ item.dormNum }}
@@ -28,25 +29,19 @@ export default {
       username: "",
       dormList: [],
       className: "",
-      flag:false
     };
   },
   onLoad(args) {
     this.username = args.username;
     this.checker = args.checker;
-    this.getDormList();
   },
   onShow() {
-    // 再次请求数据，获取ischeck属性
-    if(this.flag) {
       this.getDormList();
-    }
   },
   methods: {
     // 获取班主任角色的本班寝室列表
     async getDormList() {
-      const res = await request(
-        "/teaCheckDorm",
+      const res = await request("/teaCheckDorm",
         { username: this.username },
         "GET"
       );
@@ -58,10 +53,11 @@ export default {
       );
       this.className = this.dormList[0].className;
     },
+    // 点击寝室号跳转至历史记录
     handleToRecordMsg(e) {
-      const {dormnum} = e.currentTarget.dataset;
+      const {dormnum,tung,college} = e.currentTarget.dataset;
       uni.navigateTo({
-         url: `/pages/teaRecordMsg/index?dormNum=${dormnum}&className=${this.className}`
+         url: `/pages/teaRecordMsg/index?college=${college}&className=${this.className}&tung=${tung}&dormnum=${dormnum}&checker=${this.checker}`
       });
     }
   },
