@@ -146,13 +146,13 @@ export default {
     } */
     handleToDorm(e) {
       let { ischeck, dormnum, id } = e.currentTarget.dataset;
-      if (ischeck == "check") {
+      /* if (ischeck == "check") {
         uni.showToast({
           title: "该寝室已完成检查！",
           icon: "none"
         });
         return;
-      }
+      } */
       let className = this.dormList[id].className;
       const tung = this.tung + "栋";
       const college = this.collegeList[0];

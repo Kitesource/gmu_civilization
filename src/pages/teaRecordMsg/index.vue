@@ -108,14 +108,14 @@ export default {
     this.tung = options.tung;
     this.college = options.college;
     this.checker = options.checker;
-    this.insGetchecklist();
   },
   onShow() {
-    if (!this.flag && this.isShow) {
+    /* if (!this.flag) {
       this.handleSearch();
     }else{
       this.insGetchecklist();
-    }
+    } */
+    this.insGetchecklist();
   },
   methods: {
     //班主任账号获取单个寝室历史查寝记录
@@ -127,7 +127,6 @@ export default {
         currentPage: this.currentPage,
         pageSize: this.pageSize
       });
-      console.log(res);
       this.insDormInfo = res.data.data2;
       this.total = res.data.data;
     },
@@ -201,8 +200,6 @@ export default {
       delete this.queryObj.version;
       // 发送请求修改已读状态
       await request("/changeRead", { ...this.queryObj, position });
-      // 修改状态标识
-      this.isShow = true;
       // 将点击的对应查寝对象保存到本地
       uni.setStorageSync('teaDormInfo', this.queryObj);
       uni.navigateTo({
@@ -212,11 +209,13 @@ export default {
     //点击页码按钮时触发
     handlePageChange(e) {
       this.currentPage = e.current;
-      if(this.flag){
+      this.insGetchecklist();
+      /* if(this.flag){
         this.insGetchecklist();
       }else{
         this.handleSearch();
-      }
+      } */
+
     }
   }
 };

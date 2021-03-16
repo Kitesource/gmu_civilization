@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="title">
-      <text>寝室:{{ teaDormInfo.dormNum }}</text>
+      <text>寝室:{{ dormNum }}</text>
     </view>
     <view class="content">
       <!-- 查寝记录 -->
@@ -16,6 +16,16 @@
           <text>查寝时间:</text>
           <text class="time">{{ teaDormInfo.checkTime }}</text>
         </view>
+        <view class="className">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>寝室班级:</text>
+          <text class="class">{{teaDormInfo.className}}</text>
+        </view>
+        <view class="dormNumber">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <view>寝室成员:</view>
+          <text v-for="item in dormNumber" :key="item.id">{{item.name}}</text>
+        </view>
         <view class="state_wrap">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>合格状态:</text>
@@ -24,7 +34,7 @@
         <view class="des_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>查寝描述:</text>
-          <view v-if="checkedDes == null">无</view>
+          <view v-if="checkedDes == 'null'">无</view>
           <view v-else>{{ checkedDes }}</view>
         </view>
         <view class="checked_pic">
@@ -53,26 +63,47 @@
 </template>
 
 <script>
+import request from '../../utils/request'
 export default {
   data() {
     return {
       teaDormInfo: {}, //查寝信息对象
       urlList: [], //图片数组
+      dormNum:'', //寝室号
+      dormNumber:[], //寝室成员
+      checkedDes:''//查寝描述
     };
   },
   onShow() {
     this.getCheckedInfo();
+    setTimeout(()=>{
+      this.getDormNumber();
+    },100)
   },
   methods: {
     // 获取本地存储的信息对象
     getCheckedInfo() {
       this.teaDormInfo = uni.getStorageSync("teaDormInfo");
+      // 获取寝室号
+      this.dormNum = this.teaDormInfo.dormNum;
       // 获取查寝描述
       this.checkedDes = this.teaDormInfo.qualifiedDescribe || this.teaDormInfo.unqualifiedDescribe;
       // 分割图片路径字符串
       let url = this.teaDormInfo.qualifiedPicture || this.teaDormInfo.unqualifiedPicture;
-      if (!(typeof url == "undefined" || url == 'null' || url == "")) {
+      if (!(url == 'null' || url == "")) {
         this.urlList = url.split(",");
+      }
+    },
+    // 获取寝室成员
+    async getDormNumber() {
+      const result = await request('/getDormNum', {dormNum:this.dormNum});
+      if(result.data.code == 200){
+        this.dormNumber = result.data.data3;
+      }else{
+        uni.showToast({
+          title: '获取寝室成员失败~',
+          icon: 'none'
+        })
       }
     },
     // 新增评价
@@ -120,7 +151,7 @@ export default {
     background-color: #e6f3f9;
   }
   .content {
-    flex: 1;
+    flex: 2;
     padding: 0 10rpx;
     .checkInfo {
       display: flex;
@@ -128,21 +159,40 @@ export default {
       height: 100%;
       .checker {
         flex: 1;
-        margin-top: 20rpx;
+        display: flex;
+        align-items: center;
         .role {
           margin-left: 10rpx;
         }
       }
       .checkedTime {
         flex: 1;
-        margin-top: 20rpx;
+        display: flex;
+        align-items: center;
         .time {
           margin-left: 10rpx;
         }
       }
+      .className{
+        flex: 1;
+        display: flex;
+        align-items: center;
+        .class{
+          margin-left: 10rpx;
+        }
+      }
+      .dormNumber{
+        flex: 1;
+        display: flex;
+        align-items: center;
+        text{
+        margin-left: 10rpx;
+        }
+      }
       .state_wrap {
         flex: 1;
-        margin-top: 20rpx;
+        display: flex;
+        align-items: center;
         .state {
           margin-left: 10rpx;
         }
@@ -152,7 +202,6 @@ export default {
         margin-top: 20rpx;
         border-radius: 10rpx;
         display: flex;
-        align-items: center;
         view {
           margin-left: 10rpx;
           width: 75%;

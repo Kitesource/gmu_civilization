@@ -101,7 +101,7 @@ export default {
           uni.navigateTo({
             url: `/pages/teaDormlist/index?username=${this.username}&checker=${users}`,
           });
-        } else if (users == "ROLE_instructor" || users == "ROLE_deputySecretary" || user=="ROLE_dean") {
+        } else if (users == "ROLE_instructor") {
           //辅导员
           uni.reLaunch({
             url: `/pages/insDormlist/index`,

@@ -335,13 +335,6 @@ export default {
       // 发送请求
       if (this.qualified) {
         //合格
-        if (this.chooseImgs.length != 0 && this.uploadImgs.length == 0) {
-          uni.showToast({
-            title: "请先上传添加的图片",
-            icon: "none",
-          });
-          return;
-        }
         uni.showModal({
           title: "提示",
           content: "确认提交吗？",
@@ -361,8 +354,7 @@ export default {
                 unqualifiedPicture: "",
                 checker:this.checker
               });
-              console.log(res);
-              if (result.data.code === 200) {
+              if (result.data.code == 200) {
                 uni.showToast({
                   title: "提交成功~",
                   icon: "success",
@@ -417,16 +409,15 @@ export default {
                 unqualifiedPicture: this.unqualifiedPicture,
                 checker:_this.checker
               });
-              if (result.data.code === 200) {
+              if (result.data.code == 200) {
                 uni.showToast({
-                  title: "提交成功~",
+                  title: "提交成功",
                   icon: "success",
                 });
-                //
               } else {
                 uni.showToast({
                   title: "提交失败~",
-                  icon: "fail",
+                  icon: "none",
                 });
               }
               //提交成功后跳转到寝室列表页面
