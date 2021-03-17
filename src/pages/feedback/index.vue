@@ -219,14 +219,19 @@ export default {
       // 发送请求
       this.checkedInfo.feedbackPicture = this.uploadImgs.join(",");
       this.checkedInfo.feedbackDescribe = this.value;
+      delete this.checkedInfo.version;
       let res = await request("/sendfeedback", { ...this.checkedInfo });
+      console.log(res);
       if (res.data.code == 200) {
         uni.showToast({
           title: "提交成功",
           icon: "success",
         });
-        uni.navigateBack({
-          delta: 1,
+        uni.navigateBack();
+      } else {
+        uni.showToast({
+          title: "提交失败",
+          icon: "none",
         });
       }
     },

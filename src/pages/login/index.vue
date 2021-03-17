@@ -93,9 +93,10 @@ export default {
           });
         } else if (users == "ROLE_stucadres") {
           //学生干部
-          uni.navigateTo({
-            url: `/pages/stuDormlist/index?checker=${users}`,
+          uni.reLaunch({
+            url: `/pages/insDormlist/index`,
           });
+          uni.setStorageSync('checker', users);
         } else if (users == "ROLE_headmaster") {
           //班主任
           uni.navigateTo({

@@ -54,6 +54,29 @@
             </block>
           </view>
         </view>
+        <view class="fb_content">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>反馈描述:</text>
+          <view v-if="feedbackDes == 'null' || null">无</view>
+          <view v-else>{{ feedbackDes }}</view>
+        </view>
+        <view class="fb_pic">
+          <icon type="success_no_circle" size="10" color="#ccc" />
+          <text>反馈照片:</text>
+          <view class="pic_content">
+            <block v-if="feedbackUrl.length">
+              <view
+                class="checkedImg_item"
+                v-for="(item, index) in feedbackUrl"
+                :key="index"
+                :data-path="index"
+                @click="PreviewCheckedImg"
+              >
+                <image :src="item" />
+              </view>
+            </block>
+          </view>
+        </view>
       </view>
     </view>
     <view class="addBtn">
@@ -71,7 +94,9 @@ export default {
       urlList: [], //图片数组
       dormNum:'', //寝室号
       dormNumber:[], //寝室成员
-      checkedDes:''//查寝描述
+      checkedDes:'',//查寝描述
+      feedbackDes:'',//反馈描述
+      feedbackUrl:[],//反馈图片
     };
   },
   onShow() {
@@ -92,6 +117,13 @@ export default {
       let url = this.teaDormInfo.qualifiedPicture || this.teaDormInfo.unqualifiedPicture;
       if (!(url == 'null' || url == "")) {
         this.urlList = url.split(",");
+      }
+      // 反馈描述
+      this.feedbackDes = this.teaDormInfo.feedbackDescribe;
+      // 分割反馈图片字符串
+      let pic = this.teaDormInfo.feedbackPicture;
+      if(!(pic == 'null' || pic == "" || pic == null)){
+        this.feedbackUrl = pic.split(",")
       }
     },
     // 获取寝室成员
@@ -151,7 +183,7 @@ export default {
     background-color: #e6f3f9;
   }
   .content {
-    flex: 2;
+    flex: 4;
     padding: 0 10rpx;
     .checkInfo {
       display: flex;
@@ -199,9 +231,9 @@ export default {
       }
       .des_content {
         flex: 2;
-        margin-top: 20rpx;
         border-radius: 10rpx;
         display: flex;
+        align-items: center;
         view {
           margin-left: 10rpx;
           width: 75%;
@@ -209,7 +241,44 @@ export default {
         }
       }
       .checked_pic {
-        flex: 4;
+        flex: 3;
+        display: flex;
+        align-items: center;
+        .pic_content {
+          width: 75%;
+          height: 150rpx;
+          border: 1rpx solid #ccc;
+          margin-left: 10rpx;
+          border-radius: 10rpx;
+          display: flex;
+          align-items: center;
+          margin-left: 10rpx;
+          .checkedImg_item {
+            width: 120rpx;
+            height: 120rpx;
+            margin-left: 40rpx;
+            image {
+              width: 100%;
+              height: 100%;
+              border-radius: 15rpx;
+            }
+          }
+        }
+      }
+      .fb_content {
+        flex: 2;
+        margin-top: 40rpx;
+        display: flex;
+        align-items: center;
+        border-radius: 10rpx;
+        view {
+          margin-left: 10rpx;
+          width: 75%;
+          font-size: 30rpx;
+        }
+      }
+      .fb_pic {
+        flex: 3;
         display: flex;
         align-items: center;
         .pic_content {

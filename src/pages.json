@@ -13,12 +13,6 @@
 			}
 		},
 		{
-			"path": "pages/stuDormlist/index",
-			"style": {
-				"navigationBarTitleText": "寝室列表"
-			}
-		},
-		{
 			"path": "pages/checkedlist/index",
 			"style": {
 				"navigationBarTitleText": "走访记录"
