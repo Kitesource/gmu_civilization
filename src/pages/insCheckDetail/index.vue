@@ -70,7 +70,7 @@
                 v-for="(item, index) in feedbackUrl"
                 :key="index"
                 :data-path="index"
-                @click="PreviewCheckedImg"
+                @click="PreviewFeedbackImg"
               >
                 <image :src="item" />
               </view>
@@ -162,6 +162,15 @@ export default {
       uni.previewImage({
         current: url, // 当前显示图片的http链接
         urls: _this.urlList, // 需要预览的图片http链接列表
+      });
+    },
+    //点击查寝图片预览大图
+    PreviewFeedbackImg(event) {
+      const _this = this;
+      let { url } = event.currentTarget.dataset;
+      uni.previewImage({
+        current: url, // 当前显示图片的http链接
+        urls: _this.feedbackUrl, // 需要预览的图片http链接列表
       });
     },
   },
