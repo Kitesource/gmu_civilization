@@ -283,6 +283,7 @@ export default {
         margin-top: 20rpx;
         border-radius: 10rpx;
         display: flex;
+        align-items: center;
         view {
           margin-left: 10rpx;
           width: 75%;
