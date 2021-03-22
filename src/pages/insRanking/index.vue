@@ -85,10 +85,9 @@ export default {
       }
       let result = await request("/getStateAndCount", {
         college: this.college,
-        className: "",
         state: this.state,
       });
-      if (!result.data.data2) {
+      if (!result.data.data3) {
         uni.showToast({
           title: "暂无数据",
           icon: "none",
@@ -96,7 +95,7 @@ export default {
         this.recordList = [];
         return;
       }
-      const arr = result.data.data2;
+      const arr = result.data.data3;
       this.recordList = arr.sort(this.handleSort("message"));
     },
     // 降序函数
