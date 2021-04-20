@@ -1,7 +1,6 @@
 <template>
   <view class="container">
     <view class="form">
-      <view class="title">密码修改</view>
       <view class="username"><text>*</text>用户名:<input type="text" v-model="user"/></view>
       <view class="oldPwd"><text>*</text>原密码:<input type="password" v-model="oldPwd"/></view>
       <view class="newPwd"><text>*</text>新密码:<input type="password" v-model="newPwd"/></view>
@@ -73,7 +72,7 @@ export default {
     align-items: center;
     .form{
       width: 90%;
-      height: 500rpx;
+      height: 50%;
       text{
         color:red;
       }
@@ -93,17 +92,17 @@ export default {
       .username{
         display: flex;
         justify-items: center;
-        margin-top: 30rpx;
+        margin-top: 50rpx;
       }
       .oldPwd{
         display: flex;
         justify-items: center;
-        margin-top: 30rpx;
+        margin-top: 50rpx;
       }
       .newPwd{
         display: flex;
         justify-items: center;
-        margin-top: 30rpx;
+        margin-top: 50rpx;
       }
       button{
       width: 100%;
@@ -111,7 +110,7 @@ export default {
       margin: 0;
       font-size: 32rpx;
       border-radius: 10rpx;
-      margin-top: 60rpx;
+      margin-top: 80rpx;
       }
     }
   }

@@ -41,10 +41,7 @@ export default {
   methods: {
     // 获取班主任角色的本班寝室列表
     async getDormList() {
-      const res = await request("/teaCheckDorm",
-        { username: this.username },
-        "GET"
-      );
+      const res = await request('/teaCheckDorm',{ username: this.username },'GET');
       const dormInfo = res.data.data2;
       // 数组去重
       const map = new Map();

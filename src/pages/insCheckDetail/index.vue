@@ -19,12 +19,12 @@
         <view class="className">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>寝室班级:</text>
-          <text class="class">{{insDormInfo.className}}</text>
+          <text class="class">{{ insDormInfo.className }}</text>
         </view>
         <view class="dormNumber">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <view>寝室成员:</view>
-          <text v-for="item in dormNumber" :key="item.id">{{item.name}}</text>
+          <text v-for="item in dormNumber" :key="item.id">{{ item.name }}</text>
         </view>
         <view class="state_wrap">
           <icon type="success_no_circle" size="10" color="#ccc" />
@@ -79,31 +79,32 @@
         </view>
       </view>
     </view>
-    <view class="addBtn">
+    <view class="btn_wrap">
+      <button type="default" @click="deleteCheck">删除记录</button>
       <button type="primary" @click="addCheck">新增走访</button>
     </view>
   </view>
 </template>
 
 <script>
-import request from '../../utils/request'
+import request from "../../utils/request";
 export default {
   data() {
     return {
       insDormInfo: {}, //查寝信息对象
       urlList: [], //图片数组
-      dormNum:'', //寝室号
-      dormNumber:[], //寝室成员
-      checkedDes:'',//查寝描述
-      feedbackDes:'',//反馈描述
-      feedbackUrl:[],//反馈图片
+      dormNum: "", //寝室号
+      dormNumber: [], //寝室成员
+      checkedDes: "", //查寝描述
+      feedbackDes: "", //反馈描述
+      feedbackUrl: [], //反馈图片
     };
   },
   onShow() {
     this.getCheckedInfo();
-    setTimeout(()=>{
+    setTimeout(() => {
       this.getDormNumber();
-    },100)
+    }, 100);
   },
   methods: {
     // 获取本地存储的信息对象
@@ -114,27 +115,29 @@ export default {
       // 获取查寝描述
       this.checkedDes = this.insDormInfo.qualifiedDescribe || this.insDormInfo.unqualifiedDescribe;
       // 分割图片路径字符串
-      let url = this.insDormInfo.qualifiedPicture || this.insDormInfo.unqualifiedPicture;
-      if (!(url == 'null' || url == "")) {
+      let url =
+        this.insDormInfo.qualifiedPicture ||
+        this.insDormInfo.unqualifiedPicture;
+      if (!(url == "null" || url == "")) {
         this.urlList = url.split(",");
       }
       this.feedbackDes = this.insDormInfo.feedbackDescribe;
       // 分割反馈图片字符串
       let pic = this.insDormInfo.feedbackPicture;
-      if(!(pic == 'null' || pic == "" || pic == null)){
-        this.feedbackUrl = pic.split(",")
+      if (!(pic == "null" || pic == "" || pic == null)) {
+        this.feedbackUrl = pic.split(",");
       }
-    }, 
+    },
     // 获取寝室成员
     async getDormNumber() {
-      const result = await request('/getDormNum', {dormNum:this.dormNum});
-      if(result.data.code == 200){
+      const result = await request("/getDormNum", { dormNum: this.dormNum });
+      if (result.data.code == 200) {
         this.dormNumber = result.data.data3;
-      }else{
+      } else {
         uni.showToast({
-          title: '获取寝室成员失败~',
-          icon: 'none'
-        })
+          title: "获取寝室成员失败~",
+          icon: "none",
+        });
       }
     },
     // 新增评价
@@ -143,7 +146,7 @@ export default {
       const checker = uni.getStorageSync("checker");
       wx.navigateTo({
         url: "/pages/checkform/index",
-        success: (res)=> {
+        success: (res) => {
           // 通过eventChannel向被打开页面传送数据
           res.eventChannel.emit("acceptDataFromOpenerPage", {
             college,
@@ -152,6 +155,34 @@ export default {
             className,
             checker,
           });
+        },
+      });
+    },
+    // 删除本条记录
+    deleteCheck() {
+      uni.showModal({
+        content: "确定删除该记录吗?",
+        success: async (res) => {
+          if (res.confirm) {
+            const result = await request("/deletecheckdorm", { checkdormId: this.insDormInfo.id }, "DELETE");
+            if (result.data.code === 200) {
+              uni.showToast({
+                title: "删除成功",
+                icon: "success",
+              });
+              //删除成功后返回上一页
+              setTimeout(() => {
+                uni.navigateBack();
+              }, 300);
+            } else {
+              uni.showToast({
+                title: "删除失败",
+                icon: "none",
+              });
+            }
+          } else if (res.cancel) {
+            return;
+          }
         },
       });
     },
@@ -213,20 +244,20 @@ export default {
           margin-left: 10rpx;
         }
       }
-      .className{
+      .className {
         flex: 1;
         display: flex;
         align-items: center;
-        .class{
+        .class {
           margin-left: 10rpx;
         }
       }
-      .dormNumber{
+      .dormNumber {
         flex: 1;
         display: flex;
         align-items: center;
-        text{
-        margin-left: 10rpx;
+        text {
+          margin-left: 10rpx;
         }
       }
       .state_wrap {
@@ -312,14 +343,15 @@ export default {
       }
     }
   }
-  .addBtn {
+  .btn_wrap {
     flex: 1;
     display: flex;
     align-items: center;
+    justify-content: space-evenly;
     button {
       padding: 0;
       margin: 0;
-      width: 100%;
+      width: 45%;
       font-size: 32rpx;
     }
   }

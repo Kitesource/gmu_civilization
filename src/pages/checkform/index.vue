@@ -367,7 +367,11 @@ export default {
                 return;
               }
               //提交成功后跳转到寝室列表页面
-              uni.navigateBack();
+              setTimeout( ()=>{
+                  uni.navigateBack({
+                  delta: 2
+                });
+              }, 300)
             } else if (res.cancel) {
               // 用户点击取消
               return;
@@ -421,7 +425,11 @@ export default {
                 });
               }
               //提交成功后跳转到寝室列表页面
-              uni.navigateBack();
+              setTimeout( ()=>{
+                  uni.navigateBack({
+                  delta: 2
+                });
+              }, 300)
             } else if (res.cancel) {
               // 用户点击取消
               return;

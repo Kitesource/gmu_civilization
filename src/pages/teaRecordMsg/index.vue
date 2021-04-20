@@ -110,11 +110,6 @@ export default {
     this.checker = options.checker;
   },
   onShow() {
-    /* if (!this.flag) {
-      this.handleSearch();
-    }else{
-      this.insGetchecklist();
-    } */
     this.insGetchecklist();
   },
   methods: {
@@ -203,7 +198,7 @@ export default {
       // 将点击的对应查寝对象保存到本地
       uni.setStorageSync('teaDormInfo', this.queryObj);
       uni.navigateTo({
-        url: `/pages/teaCheckDetail/index?`
+        url: `/pages/teaCheckDetail/index`
       });
     },
     //点击页码按钮时触发
@@ -232,17 +227,19 @@ export default {
     display: flex;
     height: 100rpx;
     .dormnum{
-      flex: 2;
+      flex: 3;
       display: flex;
       align-items: center;
       justify-content: center;
       text{
-        height: 70rpx;
+        width: 80%;
         line-height: 70rpx;
         padding: 0 10rpx;
+        text-align: center;
         background-color: #007AFF;
         color: #fff;
         border-radius: 10rpx;
+        font-size: 30rpx;
       }
     }
     .btn{
@@ -250,9 +247,9 @@ export default {
       display: flex;
       align-items: center;
       button{
-        width: 95%;
-        height: 80rpx;
-        line-height: 80rpx;
+        width: 90%;
+        line-height: 70rpx;
+        font-size: 30rpx;
       }
     }
   }

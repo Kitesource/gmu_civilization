@@ -215,17 +215,19 @@ export default {
     display: flex;
     height: 100rpx;
     .dormnum{
-      flex: 2;
+      flex: 3;
       display: flex;
       align-items: center;
       justify-content: center;
       text{
-        height: 70rpx;
+        width: 80%;
         line-height: 70rpx;
         padding: 0 10rpx;
+        text-align: center;
         background-color: #007AFF;
         color: #fff;
         border-radius: 10rpx;
+        font-size: 30rpx;
       }
     }
     .btn{
@@ -233,9 +235,9 @@ export default {
       display: flex;
       align-items: center;
       button{
-        width: 95%;
-        height: 80rpx;
-        line-height: 80rpx;
+        width: 90%;
+        line-height: 70rpx;
+        font-size: 30rpx;
       }
     }
   }

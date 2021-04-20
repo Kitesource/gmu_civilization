@@ -10,6 +10,9 @@
 </template>
 
 <script>
+/* 
+	 首页修改密码登录弹窗
+ */
 	export default {
 		props: {
 			visible: {
