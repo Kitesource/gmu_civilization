@@ -43,13 +43,13 @@ import { Login } from '../../api/index'
 export default {
   data() {
     return {
-      username: "1212002012",
-      password: "123456",
+      username: "",
+      password: "",
       maxlength:15, //输入框最大输入长度
       visible: false,
       flag:false, //控制是否显示‘登录失败’
-      user:"113120180167",
-      pwd:"1234"
+      user:"",
+      pwd:""
     };
   },
   methods: {

@@ -58,8 +58,8 @@ export default {
   data() {
     return {
       checker:"", //查寝角色
-      tung: "5", //选取的栋数
-      layer: "5", //选取的层数
+      tung: "", //选取的栋数
+      layer: "", //选取的层数
       flag: false,
       dormList: [], //请求的寝室列表信息
       collegeList: [], //请求返回的学院信息
