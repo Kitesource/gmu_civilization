@@ -74,7 +74,8 @@
 import uniSearchBar from "@dcloudio/uni-ui/lib/uni-search-bar/uni-search-bar.vue";
 import uniTag from "@dcloudio/uni-ui/lib/uni-tag/uni-tag.vue";
 import uniPagination from "@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vue";
-import request from "../../utils/request";
+import request from "../../api/request";
+import { findRecordByDormnum } from '../../api/index'
 export default {
   components: {
     uniSearchBar,
@@ -115,14 +116,14 @@ export default {
   methods: {
     //辅导员账号获取单个寝室历史查寝记录
     async insGetchecklist() {
-      let res = await request("/getDetailedMsg", {
-        dormNum: this.dormNum,
-        state:this.state,
-        currentPage: this.currentPage,
-        pageSize: this.pageSize
-      });
-      this.insDormInfo = res.data.data2;
-      this.total = res.data.data;
+      const result = await findRecordByDormnum({
+        dormNum:this.dormNum, 
+        state:this.state, 
+        currentPage:this.currentPage, 
+        pageSize:this.pageSize
+        });
+      this.insDormInfo = result.data.data2;
+      this.total = result.data.data;
     },
     // 新增评价
     addCheck() {

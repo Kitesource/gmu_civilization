@@ -50,16 +50,16 @@
 
 <script>
 import uniCombox from "@dcloudio/uni-ui/lib/uni-combox/uni-combox.vue";
-import request from "../../utils/request";
+import { findDorm } from '../../api/index'
 export default {
   components: {
     uniCombox
   },
   data() {
     return {
-      checker:'', //查寝角色
-      tung: "", //选取的栋数
-      layer: "", //选取的层数
+      checker:"", //查寝角色
+      tung: "5", //选取的栋数
+      layer: "5", //选取的层数
       flag: false,
       dormList: [], //请求的寝室列表信息
       collegeList: [], //请求返回的学院信息
@@ -77,10 +77,7 @@ export default {
   methods: {
     //获取寝室列表信息
     async getDormData() {
-      let result = await request("/alldormnum", {
-        tung: this.tung,
-        layer: this.layer
-      });
+      const result = await findDorm(this.tung, this.layer);
       if (!result.data.data2.length) {
         uni.showToast({
           title: "查询失败,请重新选择~",

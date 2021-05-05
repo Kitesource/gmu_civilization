@@ -55,7 +55,7 @@
 <script>
 import uniCombox from "@dcloudio/uni-ui/lib/uni-combox/uni-combox.vue";
 import uniTag from "@dcloudio/uni-ui/lib/uni-tag/uni-tag.vue";
-import request from "../../utils/request";
+import { getStateAndCount } from '../../api/index';
 export default {
   components: {
     uniCombox,
@@ -83,10 +83,7 @@ export default {
         });
         return;
       }
-      let result = await request("/getStateAndCount", {
-        college: this.college,
-        state: this.state,
-      });
+      let result = await getStateAndCount({college:this.college, state:this.state});
       if (!result.data.data3) {
         uni.showToast({
           title: "暂无数据",

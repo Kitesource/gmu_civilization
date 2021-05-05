@@ -34,8 +34,8 @@
         <view class="des_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>查寝描述:</text>
-          <view v-if="checkedDes == 'null'">无</view>
-          <view v-else>{{ checkedDes }}</view>
+          <view v-if="checkDes">{{ checkedDes }}</view>
+          <view v-else>无</view>
         </view>
         <view class="checked_pic">
           <icon type="success_no_circle" size="10" color="#ccc" />
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import request from "../../utils/request";
+import { getDormNum, deleteCheckdorm } from "../../api/index";
 export default {
   data() {
     return {
@@ -131,7 +131,7 @@ export default {
     },
     // 获取寝室成员
     async getDormNumber() {
-      const result = await request("/getDormNum", { dormNum: this.dormNum });
+      const result = await getDormNum( this.dormNum );
       if (result.data.code == 200) {
         this.dormNumber = result.data.data3;
       } else {
@@ -165,7 +165,7 @@ export default {
         content: "确定删除该记录吗?",
         success: async (res) => {
           if (res.confirm) {
-            const result = await request("/deletecheckdorm", { checkdormId: this.teaDormInfo.id }, "DELETE");
+            const result = await deleteCheckdorm( this.teaDormInfo.id );
             if (result.data.code === 200) {
               uni.showToast({
                 title: "删除成功",

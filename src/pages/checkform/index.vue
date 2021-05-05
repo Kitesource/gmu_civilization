@@ -127,7 +127,7 @@
 import uniCombox from "@dcloudio/uni-ui/lib/uni-combox/uni-combox.vue";
 import UploadImgs from "../../components/UploadImgs/UploadImgs";
 import util from "../../utils/util";
-import request from "../../utils/request";
+import {getDormNum, insertCheckdorm} from '../../api/index'
 export default {
   components: { uniCombox, UploadImgs },
   data() {
@@ -160,15 +160,14 @@ export default {
     this.checkTime = util.formatTime(new Date());
 
     //接收dorm页发送的信息
-    const _this = this;
     const eventChannel = this.getOpenerEventChannel();
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
-    eventChannel.on("acceptDataFromOpenerPage", function (data) {
-      _this.tung = data.tung;
-      _this.dormnum = data.dormnum;
-      _this.college = data.college;
-      _this.className = data.className;
-      _this.checker = data.checker;
+    eventChannel.on("acceptDataFromOpenerPage", (data) => {
+      this.tung = data.tung;
+      this.dormnum = data.dormnum;
+      this.college = data.college;
+      this.className = data.className;
+      this.checker = data.checker;
     });
     // 调用获取成员函数
     setTimeout(()=> {
@@ -178,7 +177,7 @@ export default {
   methods: {
     // 获取寝室成员
     async getDormNumber() {
-      const result = await request('/getDormNum', {dormNum:this.dormnum});
+      const result = await getDormNum(this.dormnum);
       if(result.data.code == 200){
         this.dormNumber = result.data.data3;
       }else{
@@ -325,7 +324,6 @@ export default {
     },
     //点击提交表单数据
     commit() {
-      const _this = this;
       // 将添加的图片路径从数组中获取出来
       if (this.uploadImgs.length) {
         this.qualifiedPicture = this.uploadImgs.join(",");
@@ -341,24 +339,30 @@ export default {
           success: async (res)=> {
             if (res.confirm) {
               //用户点击确定
-              let result = await request("/insertcheckdorm", {
-                tung: this.tung,
-                dormNum: this.dormnum,
-                checkTime: this.checkTime,
-                college: this.college,
-                className: this.className,
-                state: this.state,
-                qualifiedDescribe: this.qualifiedDescribe,
-                unqualifiedDescribe: "",
-                qualifiedPicture: this.qualifiedPicture,
-                unqualifiedPicture: "",
-                checker:this.checker
-              });
+              let result = await insertCheckdorm(
+                this.tung,
+                this.dormnum,
+                this.checkTime,
+                this.college,
+                this.className,
+                this.state,
+                this.qualifiedDescribe,
+                this.unqualifiedDescribe,
+                this.qualifiedPicture,
+                this.unqualifiedPicture,
+                this.checker
+              );
               if (result.data.code == 200) {
                 uni.showToast({
                   title: "提交成功~",
                   icon: "success",
                 });
+                //提交成功后跳转到寝室列表页面
+                setTimeout( ()=>{
+                    uni.navigateBack({
+                    delta: 2
+                  });
+                }, 300);
               } else {
                 uni.showToast({
                   title: "提交失败~",
@@ -366,12 +370,6 @@ export default {
                 });
                 return;
               }
-              //提交成功后跳转到寝室列表页面
-              setTimeout( ()=>{
-                  uni.navigateBack({
-                  delta: 2
-                });
-              }, 300)
             } else if (res.cancel) {
               // 用户点击取消
               return;
@@ -380,7 +378,7 @@ export default {
         });
       } else {
         //不合格，需要描述和上传图片
-        if (!this.unqualifiedDescribe) {
+        if (!this.unqualifiedDescribe.trim()) {
           uni.showToast({
             title: "请先添加描述！",
             icon: "none",
@@ -400,36 +398,36 @@ export default {
           success: async (res)=> {
             if (res.confirm) {
               //用户点击确定
-              let result = await request("/insertcheckdorm", {
-                tung: this.tung,
-                dormNum: this.dormnum,
-                checkTime: this.checkTime,
-                college: this.college,
-                className: this.className,
-                state: this.state,
-                qualifiedDescribe: "",
-                unqualifiedDescribe: this.unqualifiedDescribe,
-                qualifiedPicture: "",
-                unqualifiedPicture: this.unqualifiedPicture,
-                checker:_this.checker
-              });
+              let result = await insertCheckdorm(
+                this.tung,
+                this.dormnum,
+                this.checkTime,
+                this.college,
+                this.className,
+                this.state,
+                this.qualifiedDescribe,
+                this.unqualifiedDescribe,
+                this.qualifiedPicture,
+                this.unqualifiedPicture,
+                this.checker
+              );
               if (result.data.code == 200) {
                 uni.showToast({
                   title: "提交成功",
                   icon: "success",
                 });
+                //提交成功后跳转到寝室列表页面
+                setTimeout( ()=>{
+                    uni.navigateBack({
+                    delta: 2
+                  });
+                }, 300)
               } else {
                 uni.showToast({
                   title: "提交失败~",
                   icon: "none",
                 });
               }
-              //提交成功后跳转到寝室列表页面
-              setTimeout( ()=>{
-                  uni.navigateBack({
-                  delta: 2
-                });
-              }, 300)
             } else if (res.cancel) {
               // 用户点击取消
               return;

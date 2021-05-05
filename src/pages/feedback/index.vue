@@ -24,8 +24,8 @@
         <view class="des_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>走访描述:</text>
-          <view v-if="checkedDes === 'null'">无</view>
-          <view v-else>{{ checkedDes }}</view>
+          <view v-if="checkedDes">{{ checkedDes }}</view>
+          <view v-else>无</view>
         </view>
         <view class="checked_pic">
           <icon type="success_no_circle" size="10" color="#ccc" />
@@ -88,7 +88,7 @@
 <script>
 import uniCard from "@dcloudio/uni-ui/lib/uni-card/uni-card.vue";
 import UploadImgs from "../../components/UploadImgs/UploadImgs";
-import request from "../../utils/request";
+import request from "../../api/request";
 export default {
   components: {
     uniCard,
@@ -140,7 +140,6 @@ export default {
         });
         return;
       }
-      const _this = this;
       uni.chooseImage({
         count: 1,
         sizeType: ["original", "compressed"],
@@ -153,7 +152,7 @@ export default {
             .split("=")[1];
           let cookie = "JSESSIONID=" + JSESSIONID;
           // tempFilePath可以作为img标签的src属性显示图片
-          _this.chooseImgs = [..._this.chooseImgs, ...res.tempFilePaths];
+          this.chooseImgs = [...this.chooseImgs, ...res.tempFilePaths];
           //上传图片
           const tempFilePaths = res.tempFilePaths;
           uni.uploadFile({
@@ -164,9 +163,9 @@ export default {
               "content-type": "multipart/form-data",
               cookie: cookie,
             },
-            success(res) {
+            success: (res) => {
               let url = JSON.parse(res.data).data;
-              _this.uploadImgs.push(url);
+              this.uploadImgs.push(url);
             },
           });
         },
@@ -190,10 +189,10 @@ export default {
       uni.showModal({
         title: "提示",
         content: "确认要删除该图片吗?",
-        success: function (res) {
+        success: (res) => {
           if (res.confirm) {
-            _this.chooseImgs.splice(index, 1);
-            _this.uploadImgs.splice(index, 1);
+            this.chooseImgs.splice(index, 1);
+            this.uploadImgs.splice(index, 1);
           } else if (res.cancel) {
             return false;
           }
@@ -220,14 +219,18 @@ export default {
       this.checkedInfo.feedbackPicture = this.uploadImgs.join(",");
       this.checkedInfo.feedbackDescribe = this.value;
       delete this.checkedInfo.version;
-      let res = await request("/sendfeedback", { ...this.checkedInfo });
+      const res = await request("/sendfeedback", { ...this.checkedInfo });
       console.log(res);
       if (res.data.code == 200) {
         uni.showToast({
           title: "提交成功",
           icon: "success",
         });
-        uni.navigateBack();
+        setTimeout(()=>{
+          uni.navigateBack({
+          delta: 1
+          });
+        }, 300)
       } else {
         uni.showToast({
           title: "提交失败",

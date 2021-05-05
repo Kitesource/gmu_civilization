@@ -39,18 +39,17 @@
 </template>
 
 <script>
-import request from "../../utils/request";
+import { Login } from '../../api/index'
 export default {
-  components: {},
   data() {
     return {
-      username: "",
-      password: "",
+      username: "1212002012",
+      password: "123456",
       maxlength:15, //输入框最大输入长度
       visible: false,
       flag:false, //控制是否显示‘登录失败’
-      user:"",
-      pwd:""
+      user:"113120180167",
+      pwd:"1234"
     };
   },
   methods: {
@@ -75,10 +74,8 @@ export default {
         return;
       }
       //后端验证
-      let result = await request("/login/login", {
-        username: this.username,
-        password: this.password,
-      });
+      const {username, password} = this;
+      const result = await Login(username, password)
       if (result.data.code === "200") {
         uni.showToast({
           title: "登录成功",
@@ -127,18 +124,16 @@ export default {
     },
     // 点击弹出层登录
     async Login() {
-      if (!this.user) {
+      const {user,pwd} = this;
+      if (!user) {
         this.flag = true
         return;
       }
-      if (!this.pwd) {
+      if (!pwd) {
         this.flag = true
         return;
       }
-      let result = await request("/login/login", {
-        username: this.user,
-        password: this.pwd,
-      });
+      const result = await Login(user, pwd);
       if (result.data.code === '200') {
         //存储cookie到本地
         uni.setStorageSync("JSESSIONID", result.cookies[0]);

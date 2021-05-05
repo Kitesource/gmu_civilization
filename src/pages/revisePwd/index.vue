@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="form">
-      <view class="username"><text>*</text>用户名:<input type="text" v-model="user"/></view>
+      <view class="username"><text>*</text>用户名:<input type="text" v-model="user" disabled/></view>
       <view class="oldPwd"><text>*</text>原密码:<input type="password" v-model="oldPwd"/></view>
       <view class="newPwd"><text>*</text>新密码:<input type="password" v-model="newPwd"/></view>
       <button type="primary" @click="confirm">确认</button>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import request from "../../utils/request";
+import { changePwd } from '../../api/index'
 export default {
   data() {
     return{
@@ -24,25 +24,22 @@ export default {
   },
   methods:{
     async confirm() {
-      if(!this.newPwd){
+      const {newPwd, oldPwd, user} = this;
+      if(!newPwd){
         uni.showToast({
           title: '密码不能为空',
           icon: 'none'
         })
         return;
       }
-      if(this.oldPwd === this.newPwd){
+      if(oldPwd === newPwd){
         uni.showToast({
           title: '原密码和新密码不能一致',
           icon: 'none'
         })
         return;
       }
-      let result = await request("/changePasswd",{
-        username: this.user,
-        oldPasswd: this.oldPwd,
-        newPasswd: this.newPwd
-      });
+      const result = await changePwd(user, oldPwd, newPwd);
       if(result.data.code == 200) {
         uni.showToast({
           title: '修改成功',

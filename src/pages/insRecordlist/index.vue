@@ -36,7 +36,7 @@
 
 <script>
 import uniCombox from "@dcloudio/uni-ui/lib/uni-combox/uni-combox.vue";
-import request from "../../utils/request";
+import { findAllClass, getStateAndCount } from '../../api/index'
 export default {
   components: {
     uniCombox
@@ -57,20 +57,13 @@ export default {
   methods: {
     // 获取学院所有班级
     async getClasses() {
-      let result = await request("/findBytime", {
-        college:'信息工程学院',
-        position:'辅导员'
-      })
+      const result = await findAllClass({college:'信息工程学院', position:'辅导员'});
       this.classes = result.data.data;
     },
     // 点击确定获取查寝信息
     async handleConfirm() {
       if(this.className && this.state){
-      let result = await request("/getStateAndCount", {
-        college:this.college,
-        className:this.className,
-        state:this.state
-      })
+      const result = await getStateAndCount({college:this.college, className:this.className, state:this.state});
       if(!result.data.data2){
         uni.showToast({
           title: '暂无数据',

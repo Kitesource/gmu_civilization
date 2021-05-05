@@ -74,7 +74,8 @@
 import uniSearchBar from "@dcloudio/uni-ui/lib/uni-search-bar/uni-search-bar.vue";
 import uniTag from "@dcloudio/uni-ui/lib/uni-tag/uni-tag.vue";
 import uniPagination from "@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vue";
-import request from "../../utils/request";
+import { stuDorm } from "../../api/index";
+import request from '../../api/request'
 export default {
   components: {
     uniSearchBar,
@@ -111,11 +112,7 @@ export default {
   methods: {
     //学生账号获取查寝记录的方法
     async getCheckList() {
-      let res = await request("/stuDorm", {
-        stunum: this.username,
-        currentPage: this.currentPage,
-        pageSize: this.pageSize
-      });
+      let res = await stuDorm(this.username, this.currentPage, this.pageSize);
       this.dormInfo = res.data.data2;
       this.total = res.data.data3;
      /*  const array = res.data.data2;
