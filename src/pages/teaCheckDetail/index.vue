@@ -34,7 +34,7 @@
         <view class="des_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>查寝描述:</text>
-          <view v-if="checkDes">{{ checkedDes }}</view>
+          <view v-if="checkedDes">{{ checkedDes }}</view>
           <view v-else>无</view>
         </view>
         <view class="checked_pic">
@@ -57,8 +57,8 @@
         <view class="fb_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>反馈描述:</text>
-          <view v-if="feedbackDes == 'null' || null">无</view>
-          <view v-else>{{ feedbackDes }}</view>
+          <view v-if="feedbackDes">{{ feedbackDes }}</view>
+          <view v-else>无</view>
         </view>
         <view class="fb_pic">
           <icon type="success_no_circle" size="10" color="#ccc" />
