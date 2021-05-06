@@ -78,8 +78,7 @@
 import uniSearchBar from "@dcloudio/uni-ui/lib/uni-search-bar/uni-search-bar.vue";
 import uniTag from "@dcloudio/uni-ui/lib/uni-tag/uni-tag.vue";
 import uniPagination from "@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vue";
-import request from '../../api/request'
-import { findRecordByDormnum } from "../../api/index";
+import { findDormAllRecord, changeRead } from "../../api/index";
 
 export default {
   components: {
@@ -117,7 +116,7 @@ export default {
   methods: {
     //辅导员账号获取单个寝室历史查寝记录
     async insGetchecklist() {
-      const result = await findRecordByDormnum({dormNum:this.dormnum, currentPage:this.currentPage, pageSize:this.pageSize});
+      const result = await findDormAllRecord({dormNum:this.dormnum, currentPage:this.currentPage, pageSize:this.pageSize});
       this.insDormInfo = result.data.data2;
       this.total = result.data.data;
     },
@@ -150,7 +149,7 @@ export default {
     //回车确认搜索
     /* async handleSearch(e) {
       if (this.value == "read" || this.value == "unread") {
-        let res = await request("/findBytime", {
+        let res = await ("/findBytime", {
           state: '',
           className: this.className,
           position: "",
@@ -186,7 +185,7 @@ export default {
       });
       delete this.queryObj.version;
       // 发送请求修改已读状态
-      await request("/changeRead", { ...this.queryObj, position });
+      await changeRead({ ...this.queryObj, position });
       // 将点击的对应查寝对象保存到本地
       uni.setStorageSync('insDormInfo', this.queryObj);
       uni.navigateTo({

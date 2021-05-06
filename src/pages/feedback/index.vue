@@ -88,7 +88,7 @@
 <script>
 import uniCard from "@dcloudio/uni-ui/lib/uni-card/uni-card.vue";
 import UploadImgs from "../../components/UploadImgs/UploadImgs";
-import request from "../../api/request";
+import { sendFeedback } from '../../api/index'
 export default {
   components: {
     uniCard,
@@ -219,9 +219,8 @@ export default {
       this.checkedInfo.feedbackPicture = this.uploadImgs.join(",");
       this.checkedInfo.feedbackDescribe = this.value;
       delete this.checkedInfo.version;
-      const res = await request("/sendfeedback", { ...this.checkedInfo });
-      console.log(res);
-      if (res.data.code == 200) {
+      const result = await sendFeedback(this.checkedInfo);
+      if (result.data.code == 200) {
         uni.showToast({
           title: "提交成功",
           icon: "success",

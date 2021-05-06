@@ -129,7 +129,10 @@ import UploadImgs from "../../components/UploadImgs/UploadImgs";
 import util from "../../utils/util";
 import {getDormNum, insertCheckdorm} from '../../api/index'
 export default {
-  components: { uniCombox, UploadImgs },
+  components: { 
+      uniCombox, 
+      UploadImgs 
+  },
   data() {
     return {
       checker:'', //查寝角色

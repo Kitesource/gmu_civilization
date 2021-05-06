@@ -78,8 +78,7 @@
 import uniSearchBar from "@dcloudio/uni-ui/lib/uni-search-bar/uni-search-bar.vue";
 import uniTag from "@dcloudio/uni-ui/lib/uni-tag/uni-tag.vue";
 import uniPagination from "@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vue";
-import request from "../../api/request";
-import {findRecordByDormnum} from "../../api/index"
+import { findDormAllRecord, changeRead } from "../../api/index"
 export default {
   components: {
     uniSearchBar,
@@ -116,7 +115,7 @@ export default {
   methods: {
     //班主任账号获取单个寝室历史查寝记录
     async insGetchecklist() {
-      const result = await findRecordByDormnum({
+      const result = await findDormAllRecord({
         dormNum: this.dormnum,
         className: this.className,
         currentPage: this.currentPage,
@@ -194,7 +193,7 @@ export default {
       });
       delete this.queryObj.version;
       // 发送请求修改已读状态
-      await request("/changeRead", { ...this.queryObj, position });
+      await changeRead({ ...this.queryObj, position });
       // 将点击的对应查寝对象保存到本地
       uni.setStorageSync('teaDormInfo', this.queryObj);
       uni.navigateTo({

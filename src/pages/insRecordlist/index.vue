@@ -2,9 +2,13 @@
   <view class="container">
     <!-- 下拉框选择 -->
     <view class="title">
+      <view class="classes"><image src="../../static/instructor/class.png"></image></view>
       <view class="select">
-        <uni-combox :candidates="classes" placeholder="请选择班级" v-model="className"></uni-combox>
-        <uni-combox :candidates="states" placeholder="请选择状态" v-model="state"></uni-combox>
+        <uni-combox 
+          :candidates="classes" 
+          placeholder="请选择班级" 
+          v-model="className">
+        </uni-combox>
       </view>
       <view class="btnContainer"><button size="mini" @click="handleConfirm">确认</button></view>
     </view>
@@ -12,11 +16,10 @@
     <view class="content">
       <!-- 默认信息 -->
       <view class="default" v-if="!recordList.length">
-        <p>Please select className and  state first...</p>
+        <p>Please select className first...</p>
       </view>
       <!-- 寝室信息 -->
       <view class="dormList" v-else>
-        <view class="title">按<text>{{state}}</text>降序排列</view>
         <scroll-view class="scrollView" scroll-y>
           <view
             class='dormItem'
@@ -62,32 +65,23 @@ export default {
     },
     // 点击确定获取查寝信息
     async handleConfirm() {
-      if(this.className && this.state){
-      const result = await getStateAndCount({college:this.college, className:this.className, state:this.state});
-      if(!result.data.data2){
-        uni.showToast({
-          title: '暂无数据',
-          icon: 'none'
-        })
-        this.recordList = [];
-        return;
-      }
-      const arr = result.data.data2;
-      this.recordList = arr.sort(this.handleSort('message'));
+      if(this.className){
+        const result = await getStateAndCount({college:this.college, className:this.className});
+        if(!result.data.data3){
+          uni.showToast({
+            title: '暂无数据',
+            icon: 'none'
+          })
+          this.recordList = [];
+          return;
+        }
+        this.recordList= result.data.data3;
       }else{
         uni.showToast({
-          title: '请选择班级和状态',
+          title: '请先选择班级',
           icon: 'none'
         })
         return;
-      }
-    },
-    // 降序函数
-    handleSort(property){
-      return function(a,b) {
-        const val1 = a[property];
-        const val2 = b[property];
-        return val2 - val1;
       }
     },
     // 点击寝室号跳转至对应寝室查寝记录列表页面
@@ -104,20 +98,30 @@ export default {
 
 <style scoped lang="scss"> 
 .container{
-  .title{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .title {
+    height: 80rpx;
     display: flex;
-    .select {
-      flex: 8;
+    .classes{
+      flex: 2;
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      justify-content: center;
+      align-items: center;
+      image{
+        height: 60rpx;
+        width: 60rpx;
+      }
+    }
+    .select {
+      flex: 6;
     }
     .btnContainer {
       flex: 2;
       display: flex;
       align-items: center;
     }
-    
   }
   .content {
     height: calc(100vh - 40px);
@@ -144,7 +148,7 @@ export default {
         }
       }
       .scrollView {
-        height: calc(100vh - 80px);
+        height: calc(100vh - 40px);
         .checkColor {
           color: gray;
         }

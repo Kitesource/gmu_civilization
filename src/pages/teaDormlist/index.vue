@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {teaCheckDorm} from "../../api/index";
+import { teaCheckDorm } from "../../api/index";
 export default {
   data() {
     return {

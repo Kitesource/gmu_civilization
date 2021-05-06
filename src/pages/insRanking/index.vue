@@ -78,7 +78,7 @@ export default {
     async handleConfirm() {
       if (!this.state) {
         uni.showToast({
-          title: "请选择条件~",
+          title: "请先选择条件",
           icon: "none",
         });
         return;

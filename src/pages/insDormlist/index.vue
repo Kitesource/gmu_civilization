@@ -50,7 +50,7 @@
 
 <script>
 import uniCombox from "@dcloudio/uni-ui/lib/uni-combox/uni-combox.vue";
-import { findDorm } from '../../api/index'
+import { findAllDorm } from '../../api/index'
 export default {
   components: {
     uniCombox
@@ -77,7 +77,7 @@ export default {
   methods: {
     //获取寝室列表信息
     async getDormData() {
-      const result = await findDorm(this.tung, this.layer);
+      const result = await findAllDorm(this.tung, this.layer);
       if (!result.data.data2.length) {
         uni.showToast({
           title: "查询失败,请重新选择~",
