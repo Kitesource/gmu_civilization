@@ -103,6 +103,7 @@ export default {
       value: "", //反馈描述
       chooseImgs: [],
       uploadImgs: [],
+      isUploading: 0, //图片上传状态 0 初始， 1 上传成功， 2 上传失败
     };
   },
   //监听页面加载
@@ -164,8 +165,16 @@ export default {
               cookie: cookie,
             },
             success: (res) => {
-              let url = JSON.parse(res.data).data;
-              this.uploadImgs.push(url);
+              const result = JSON.parse(res.data);
+              if(result.code == 200){
+                let url = result.data;
+                this.uploadImgs.push(url);
+              } else {
+                uni.showToast({
+                  title: '图片上传失败',
+                  icon: 'none'
+                })
+              }
             },
           });
         },

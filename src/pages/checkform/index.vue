@@ -18,13 +18,13 @@
       <view class="dormNumber">
         <text class="icon">*</text>
         寝室成员:
-        <text v-for="item in dormNumber" :key="item.id">{{item.name}}</text>
+        <text v-for="item in dormNumber" :key="item.id">{{ item.name }}</text>
       </view>
       <!-- 班级 -->
       <view class="className">
         <text class="icon">*</text>
         <text class="item_title">寝室班级:</text>
-        <text>{{className}}</text>
+        <text>{{ className }}</text>
       </view>
       <!-- 查寝时间 -->
       <view class="currentTime">
@@ -34,14 +34,15 @@
       </view>
       <!-- 选择是否合格 -->
       <view class="selection_group">
-        <view class="section_title"><text class="icon">*</text> 是否合格:
-        <icon type="info" color="gray" size="12" />
-        <text class="tip">较差/脏乱差均为不合格</text>
+        <view class="section_title"
+          ><text class="icon">*</text> 是否合格:
+          <icon type="info" color="gray" size="12" />
+          <text class="tip">较差/脏乱差均为不合格</text>
         </view>
         <radio-group name="evaluation" @change="selectedRadio">
           <label><radio checked="true" value="优秀" />优秀 </label>
           <label><radio value="良好" /> 良好</label>
-          <label><radio value="一般"/>一般</label>
+          <label><radio value="一般" />一般</label>
           <label><radio value="较差" />较差</label>
           <label><radio value="脏乱差" />脏乱差</label>
         </radio-group>
@@ -61,7 +62,8 @@
         </view>
         <!-- 上传图片 -->
         <view class="img_group">
-          <view class="img_title">合格图片:
+          <view class="img_title"
+            >合格图片:
             <icon type="info" color="gray" size="12" />
             <text class="tip">点击可预览图片,长按可选择删除</text>
           </view>
@@ -95,7 +97,8 @@
         </view>
         <!-- 上传图片 -->
         <view class="img_group">
-          <view class="img_title"><text class="icon">*</text>不合格图片:
+          <view class="img_title"
+            ><text class="icon">*</text>不合格图片:
             <icon type="info" color="gray" size="12" />
             <text class="tip">点击可预览图片,长按可选择删除</text>
           </view>
@@ -115,11 +118,11 @@
         </view>
       </block>
     </view>
-  <!-- 提交/重置 -->
-  <view class="last_group">
-    <button type="default" @click="reset">重置</button>
-    <button type="primary" @click="commit">提交</button>
-  </view>
+    <!-- 提交/重置 -->
+    <view class="last_group">
+      <button type="default" @click="reset">重置</button>
+      <button type="primary" @click="commit">提交</button>
+    </view>
   </view>
 </template>
 
@@ -127,21 +130,21 @@
 import uniCombox from "@dcloudio/uni-ui/lib/uni-combox/uni-combox.vue";
 import UploadImgs from "../../components/UploadImgs/UploadImgs";
 import util from "../../utils/util";
-import {getDormNum, insertCheckdorm} from '../../api/index'
+import { getDormNum, insertCheckdorm } from "../../api/index";
 export default {
-  components: { 
-      uniCombox, 
-      UploadImgs 
+  components: {
+    uniCombox,
+    UploadImgs,
   },
   data() {
     return {
-      checker:'', //查寝角色
+      checker: "", //查寝角色
       checkTime: null, //当前时间
       dormnum: "", //寝室id
       tung: "", //寝室栋数
       // collegeList: "", //dorm页面发送来的学院信息数组
-      className: "", 
-      dormNumber:[], //寝室成员信息
+      className: "",
+      dormNumber: [], //寝室成员信息
       college: "", //用户点击选择的学院
       isSelected: true, //默认优秀
       state: "优秀", //合格状态: '优秀'/ '良好' / '一般'/ '较差' / '脏乱差',
@@ -173,29 +176,29 @@ export default {
       this.checker = data.checker;
     });
     // 调用获取成员函数
-    setTimeout(()=> {
+    setTimeout(() => {
       this.getDormNumber();
-    },100)
+    }, 100);
   },
   methods: {
     // 获取寝室成员
     async getDormNumber() {
       const result = await getDormNum(this.dormnum);
-      if(result.data.code == 200){
+      if (result.data.code == 200) {
         this.dormNumber = result.data.data3;
-      }else{
+      } else {
         uni.showToast({
-          title: '获取寝室成员失败~',
-          icon: 'none'
-        })
+          title: "获取寝室成员失败~",
+          icon: "none",
+        });
       }
     },
     // 监听radio-group选中项发生变化时触发change事件
     selectedRadio(e) {
       this.state = e.detail.value;
-      if( (e.detail.value == "较差") || (e.detail.value == "脏乱差")){
+      if (e.detail.value == "较差" || e.detail.value == "脏乱差") {
         this.qualified = false;
-      }else {
+      } else {
         this.qualified = true;
       }
       //切换后清空表单数据
@@ -216,7 +219,6 @@ export default {
         });
         return;
       }
-      const _this = this;
       uni.chooseImage({
         count: 1,
         sizeType: ["original", "compressed"],
@@ -229,11 +231,11 @@ export default {
             .split("=")[1];
           let cookie = "JSESSIONID=" + JSESSIONID;
           //将选择的图片保存在数组中
-          if (_this.qualified) {
-            _this.chooseImgs = [..._this.chooseImgs, ...imageRes.tempFilePaths];
+          if (this.qualified) {
+            this.chooseImgs = [...this.chooseImgs, ...imageRes.tempFilePaths];
           } else {
-            _this.unChooseImgs = [
-              ..._this.unChooseImgs,
+            this.unChooseImgs = [
+              ...this.unChooseImgs,
               ...imageRes.tempFilePaths,
             ];
           }
@@ -248,12 +250,20 @@ export default {
             filePath: tempFilePaths[tempFilePaths.length - 1],
             name: "file",
             success: (res) => {
-              let url = JSON.parse(res.data).data;
-              // 将上传图片后得到的路径保存在数组中
-              if (_this.qualified) {
-                _this.uploadImgs.push(url);
-              } else {
-                _this.unUploadImgs.push(url);
+              const result = JSON.parse(res.data);
+              if (result.code == 200) {
+                let url = result.data;
+                // 将上传图片后得到的路径保存在数组中
+                if (this.qualified) {
+                  this.uploadImgs.push(url);
+                }else {
+                  this.unUploadImgs.push(url);
+                }
+              }else {
+                uni.showToast({
+                  title: '图片上传失败',
+                  icon: 'none'
+                })
               }
             },
           });
@@ -313,7 +323,7 @@ export default {
       uni.showModal({
         title: "提示",
         content: "确认要重置吗",
-        success:(res)=> {
+        success: (res) => {
           if (res.confirm) {
             this.qualifiedDescribe = "";
             this.unqualifiedDescribe = "";
@@ -339,7 +349,7 @@ export default {
         uni.showModal({
           title: "提示",
           content: "确认提交吗？",
-          success: async (res)=> {
+          success: async (res) => {
             if (res.confirm) {
               //用户点击确定
               let result = await insertCheckdorm(
@@ -361,9 +371,9 @@ export default {
                   icon: "success",
                 });
                 //提交成功后跳转到寝室列表页面
-                setTimeout( ()=>{
-                    uni.navigateBack({
-                    delta: 2
+                setTimeout(() => {
+                  uni.navigateBack({
+                    delta: 2,
                   });
                 }, 300);
               } else {
@@ -398,7 +408,7 @@ export default {
         uni.showModal({
           title: "提交",
           content: "确认提交吗？",
-          success: async (res)=> {
+          success: async (res) => {
             if (res.confirm) {
               //用户点击确定
               let result = await insertCheckdorm(
@@ -420,11 +430,11 @@ export default {
                   icon: "success",
                 });
                 //提交成功后跳转到寝室列表页面
-                setTimeout( ()=>{
-                    uni.navigateBack({
-                    delta: 2
+                setTimeout(() => {
+                  uni.navigateBack({
+                    delta: 2,
                   });
-                }, 300)
+                }, 300);
               } else {
                 uni.showToast({
                   title: "提交失败~",
@@ -447,7 +457,7 @@ export default {
 .form_container {
   height: 100%;
   display: flex;
-    flex-direction: column;
+  flex-direction: column;
   .title {
     flex: 1;
     display: flex;
@@ -478,15 +488,15 @@ export default {
         margin-left: 20rpx;
       }
     }
-    .dormNumber{
+    .dormNumber {
       flex: 1;
       display: flex;
       align-items: center;
-      text:not(:first-child){
+      text:not(:first-child) {
         margin-left: 20rpx;
       }
     }
-    .currentTime{
+    .currentTime {
       flex: 1;
       display: flex;
       align-items: center;
@@ -494,12 +504,12 @@ export default {
         margin-right: 20rpx;
       }
     }
-    .className{
+    .className {
       flex: 1;
       display: flex;
       align-items: center;
-      .item_title{
-        margin-right:20rpx ;
+      .item_title {
+        margin-right: 20rpx;
       }
     }
     .selection_group {
@@ -507,7 +517,7 @@ export default {
       .section_title {
         padding-bottom: 20rpx;
       }
-      radio-group{
+      radio-group {
         margin-left: 10rpx;
       }
       label {
@@ -569,19 +579,19 @@ export default {
     }
   }
   /* 提交/返回区域 */
-    .last_group {
-      flex: 3;
-      font-size: 28rpx;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-evenly;
-      button {
-        width: 60%;
-        margin: 10rpx 0;
-        padding: 0;
-        font-size: 32rpx;
-      }
+  .last_group {
+    flex: 3;
+    font-size: 28rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    button {
+      width: 60%;
+      margin: 10rpx 0;
+      padding: 0;
+      font-size: 32rpx;
     }
+  }
 }
 </style>
