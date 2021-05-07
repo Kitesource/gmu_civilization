@@ -255,13 +255,14 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #eee;
   .title {
     height: 80rpx;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #e6f3f9;
+    background-color: #fff;
   }
   .content {
     width: 100%;
@@ -270,8 +271,11 @@ export default {
     display: flex;
     flex-direction: column;
     .checkInfo {
-      flex: 4;
+      flex: 5;
       width: 100%;
+      margin: 10rpx 0;
+      background-color: #fff;
+      border-radius: 5rpx;
       .checker {
         margin-top: 20rpx;
         .role {
@@ -328,8 +332,11 @@ export default {
       }
     }
     .feedbackInfo {
-      flex: 5;
+      flex: 6;
       width: 100%;
+      background-color: #fff;
+      border-radius: 5rpx;
+      padding: 0 8rpx;
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
@@ -367,9 +374,8 @@ export default {
           height: 120rpx;
           padding: 0;
           margin: 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          line-height: 120rpx;
+          text-align: center;
           font-size: 60rpx;
           color: #ccc;
         }
@@ -383,9 +389,12 @@ export default {
       width: 100%;
       display: flex;
       justify-content: center;
+      align-items: center;
+      margin-top: 10rpx;
+      background-color: #fff;
       button {
         width: 60%;
-        height: 90rpx;
+        height: 80rpx;
         font-size: 32rpx;
         display: flex;
         justify-content: center;

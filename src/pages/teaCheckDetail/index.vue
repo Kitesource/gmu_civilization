@@ -54,6 +54,8 @@
             </block>
           </view>
         </view>
+      </view>
+      <view class="feedbackInfo">
         <view class="fb_content">
           <icon type="success_no_circle" size="10" color="#ccc" />
           <text>反馈描述:</text>
@@ -97,7 +99,7 @@ export default {
       dormNumber: [], //寝室成员
       checkedDes: "", //查寝描述
       feedbackDes: "", //反馈描述
-      feedbackUrl: [], //反馈图片
+      feedbackUrl: [] //反馈图片
     };
   },
   onShow() {
@@ -113,7 +115,9 @@ export default {
       // 获取寝室号
       this.dormNum = this.teaDormInfo.dormNum;
       // 获取查寝描述
-      this.checkedDes = this.teaDormInfo.qualifiedDescribe || this.teaDormInfo.unqualifiedDescribe;
+      this.checkedDes =
+        this.teaDormInfo.qualifiedDescribe ||
+        this.teaDormInfo.unqualifiedDescribe;
       // 分割图片路径字符串
       let url =
         this.teaDormInfo.qualifiedPicture ||
@@ -131,13 +135,13 @@ export default {
     },
     // 获取寝室成员
     async getDormNumber() {
-      const result = await getDormNum( this.dormNum );
+      const result = await getDormNum(this.dormNum);
       if (result.data.code == 200) {
         this.dormNumber = result.data.data3;
       } else {
         uni.showToast({
           title: "获取寝室成员失败~",
-          icon: "none",
+          icon: "none"
         });
       }
     },
@@ -147,29 +151,29 @@ export default {
       const checker = uni.getStorageSync("checker");
       wx.navigateTo({
         url: "/pages/checkform/index",
-        success: (res) => {
+        success: res => {
           // 通过eventChannel向被打开页面传送数据
           res.eventChannel.emit("acceptDataFromOpenerPage", {
             college,
             tung,
             dormnum: dormNum,
             className,
-            checker,
+            checker
           });
-        },
+        }
       });
     },
     // 删除本条记录
     deleteCheck() {
       uni.showModal({
         content: "确定删除该记录吗?",
-        success: async (res) => {
+        success: async res => {
           if (res.confirm) {
-            const result = await deleteCheckdorm( this.teaDormInfo.id );
+            const result = await deleteCheckdorm(this.teaDormInfo.id);
             if (result.data.code === 200) {
               uni.showToast({
                 title: "删除成功",
-                icon: "success",
+                icon: "success"
               });
               //删除成功后返回上一页
               setTimeout(() => {
@@ -178,13 +182,13 @@ export default {
             } else {
               uni.showToast({
                 title: "删除失败",
-                icon: "none",
+                icon: "none"
               });
             }
           } else if (res.cancel) {
             return;
           }
-        },
+        }
       });
     },
     //点击查寝图片预览大图
@@ -193,7 +197,7 @@ export default {
       let { url } = event.currentTarget.dataset;
       uni.previewImage({
         current: url, // 当前显示图片的http链接
-        urls: _this.urlList, // 需要预览的图片http链接列表
+        urls: _this.urlList // 需要预览的图片http链接列表
       });
     },
     //点击查寝图片预览大图
@@ -202,10 +206,10 @@ export default {
       let { url } = event.currentTarget.dataset;
       uni.previewImage({
         current: url, // 当前显示图片的http链接
-        urls: _this.feedbackUrl, // 需要预览的图片http链接列表
+        urls: _this.feedbackUrl // 需要预览的图片http链接列表
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -214,21 +218,27 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #eee;
   .title {
     height: 80rpx;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #e6f3f9;
+    background-color: #fff;
   }
   .content {
-    flex: 4;
+    flex: 5;
+    display: flex;
+    flex-direction: column;
     padding: 0 10rpx;
     .checkInfo {
+      flex: 3;
       display: flex;
       flex-direction: column;
-      height: 100%;
+      margin: 10rpx 0;
+      background-color: #fff;
+      border-radius: 6rpx;
       .checker {
         flex: 1;
         display: flex;
@@ -305,6 +315,13 @@ export default {
           }
         }
       }
+    }
+    .feedbackInfo {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      background-color: #fff;
+      border-radius: 6rpx;
       .fb_content {
         flex: 2;
         margin-top: 40rpx;
@@ -349,6 +366,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    background-color: #fff;
+    margin-top: 10rpx;
     button {
       padding: 0;
       margin: 0;

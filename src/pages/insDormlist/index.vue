@@ -6,12 +6,14 @@
         <uni-combox
           :candidates="Tungs"
           placeholder="请选择栋数"
-          v-model="tung"
+          style="text-align:center"
+          @input="handleTung"
         ></uni-combox>
         <uni-combox
           :candidates="layers"
-          v-model="layer"
           placeholder="请选择层数"
+          style="text-align:center"
+           @input="handleLayer"
         ></uni-combox>
       </view>
       <view class="btnContainer">
@@ -65,8 +67,8 @@ export default {
       collegeList: [], //请求返回的学院信息
       dormnum: "", //选取的寝室号
       className: "", //请求返回的班级信息
-      Tungs: ["4", "5", "6", "7", "8"],
-      layers: ["1", "2", "3", "4", "5", "6"]
+      Tungs: ["4栋", "5栋", "6栋", "7栋", "8栋"],
+      layers: ["1层", "2层", "3层", "4层", "5层", "6层"]
     };
   },
   onShow() {
@@ -87,6 +89,17 @@ export default {
       }
       this.dormList = result.data.data2;
       this.collegeList = result.data.data;
+    },
+    // 监听栋数和层数的输入
+    handleTung(e) {
+      // 将'栋数'截取并转换成 number类型的栋数
+      const tung = e.substring(0,1) * 1;
+      this.tung = tung;
+    },
+    handleLayer(e) {
+      // 将'层数'截取并转换成 number类型的层数
+      const layer = e.substring(0,1) * 1;
+      this.layer = layer;
     },
     //点击确定查找寝室列表
     handleConfirm() {

@@ -55,9 +55,10 @@ export default {
   methods: {
     //点击登录
     async login() {
+      const {username, password} = this;
       // 1. 收集表单项数据
       //前端验证
-      if (!this.username) {
+      if (!username) {
         //提示用户
         uni.showToast({
           title: "学号不能为空",
@@ -65,7 +66,7 @@ export default {
         });
         return;
       }
-      if (!this.password) {
+      if (!password) {
         //提示用户
         uni.showToast({
           title: "密码不能为空",
@@ -74,7 +75,6 @@ export default {
         return;
       }
       //后端验证
-      const {username, password} = this;
       const result = await Login(username, password)
       if (result.data.code === "200") {
         uni.showToast({

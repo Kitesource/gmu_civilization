@@ -6,7 +6,8 @@
       <view class="select">
         <uni-combox 
           :candidates="classes" 
-          placeholder="请选择班级" 
+          placeholder="请选择班级"
+          style="text-align:center"
           v-model="className">
         </uni-combox>
       </view>

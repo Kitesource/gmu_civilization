@@ -7,6 +7,7 @@
         <uni-combox
           :candidates="states"
           placeholder="请选择状态"
+          style="text-align:center"
           v-model="state"
         ></uni-combox>
       </view>
