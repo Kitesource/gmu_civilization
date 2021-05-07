@@ -174,7 +174,6 @@ export default {
           currentPage,
           pageSize
         );
-        console.log(result);
         this.insDormInfo = result.data.data2;
         // 搜索请求成功后，使flag变为false
         this.flag = false;
