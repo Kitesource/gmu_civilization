@@ -33,7 +33,7 @@
             class="dormItem"
             hover-class="Active"
             v-for="(item, index) in recordList"
-            :key="item.code"
+            :key="index"
             @click="handleToRecord"
             :data-dormnum="item.data2"
           >
@@ -93,8 +93,8 @@ export default {
         this.recordList = [];
         return;
       }
-      const arr = result.data.data3;
-      this.recordList = arr.sort(this.handleSort("message"));
+      let arr = result.data.data3;
+      this.recordList = arr.sort(this.handleSort('message'));
     },
     // 降序函数
     handleSort(property) {
