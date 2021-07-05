@@ -93,8 +93,8 @@ export default {
         this.recordList = [];
         return;
       }
-      let arr = result.data.data3;
-      this.recordList = arr.sort(this.handleSort('message'));
+      const arr = result.data.data3;
+      this.recordList = arr.sort(this.handleSort("message"));
     },
     // 降序函数
     handleSort(property) {
