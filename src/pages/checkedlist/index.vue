@@ -18,60 +18,65 @@
       <uni-tag text="合格状态" type="primary" :inverted="true"></uni-tag>
       <uni-tag text="是否已读" type="primary" :inverted="true"></uni-tag>
     </view>
-    <scroll-view class="sroll_content" enable-flex scroll-y>
-      <view
-        class="sroll_item"
-        hover-class="Active"
-        @click="handleToFeedback"
-        :data-id="item.id"
-        v-for="(item, index) in dormInfo"
-        :key="index"
-      >
-        <view class="item_time">
-          <!-- <uni-tag :text="item.checkTime" type="primary"></uni-tag> -->
-          <view class="checkTime">{{ item.checkTime }}</view>
+    <view v-if="dormInfo.length">
+      <scroll-view class="sroll_content" enable-flex scroll-y>
+        <view
+          class="sroll_item"
+          hover-class="Active"
+          @click="handleToFeedback"
+          :data-id="item.id"
+          v-for="(item, index) in dormInfo"
+          :key="index"
+        >
+          <view class="item_time">
+            <!-- <uni-tag :text="item.checkTime" type="primary"></uni-tag> -->
+            <view class="checkTime">{{ item.checkTime }}</view>
+          </view>
+          <view class="item">
+            <uni-tag
+              v-if="item.state == '优秀'"
+              text="优秀"
+              type="success"
+            ></uni-tag>
+            <uni-tag
+              v-else-if="item.state == '良好'"
+              text="良好"
+              type="success"
+            ></uni-tag>
+            <uni-tag
+              v-else-if="item.state == '一般'"
+              text="一般"
+              type="success"
+            ></uni-tag>
+            <uni-tag
+              v-else-if="item.state == '较差'"
+              text="较差"
+              type="warning"
+            ></uni-tag>
+            <uni-tag v-else text="脏乱差" type="error"></uni-tag>
+          </view>
+          <view class="item">
+            <uni-tag
+              v-if="item.stuReadIt == 'read'"
+              text="已读"
+              type="default"
+            ></uni-tag>
+            <uni-tag v-else text="未读" type="warning"></uni-tag>
+          </view>
         </view>
-        <view class="item">
-          <uni-tag
-            v-if="item.state == '优秀'"
-            text="优秀"
-            type="success"
-          ></uni-tag>
-          <uni-tag
-            v-else-if="item.state == '良好'"
-            text="良好"
-            type="success"
-          ></uni-tag>
-          <uni-tag
-            v-else-if="item.state == '一般'"
-            text="一般"
-            type="success"
-          ></uni-tag>
-          <uni-tag
-            v-else-if="item.state == '较差'"
-            text="较差"
-            type="warning"
-          ></uni-tag>
-          <uni-tag v-else text="脏乱差" type="error"></uni-tag>
-        </view>
-        <view class="item">
-          <uni-tag
-            v-if="item.stuReadIt == 'read'"
-            text="已读"
-            type="default"
-          ></uni-tag>
-          <uni-tag v-else text="未读" type="warning"></uni-tag>
-        </view>
+      </scroll-view>
+      <view class="pagination">
+        <uni-pagination
+          show-icon="true"
+          :total="total"
+          :pageSize="pageSize"
+          :current="currentPage"
+          @change="handlePageChange"
+        ></uni-pagination>
       </view>
-    </scroll-view>
-    <view class="pagination">
-      <uni-pagination
-        show-icon="true"
-        :total="total"
-        :pageSize="pageSize"
-        :current="currentPage"
-        @change="handlePageChange"
-      ></uni-pagination>
+    </view>
+    <view v-else class="no_data">
+      NoData
     </view>
   </view>
 </template>
@@ -249,6 +254,12 @@ export default {
   }
   .pagination {
     background-color: #f8f8f8;
+  }
+  .no_data {
+    height: calc(100vh - 132px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
